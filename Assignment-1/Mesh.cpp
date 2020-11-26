@@ -25,60 +25,52 @@ float    ColorArr[COLORNUM][3] = {
 };
 
 void Mesh::CreateCylinder(int nSegment, float Angle, float fHeight, float fRadius) {
-    numVerts=nSegment * 2 + 1;
-    pt = new Point3[numVerts];
+    int numSegment = roundf(Angle/(2*PI)*nSegment);
+	numVerts=nSegment*2 + 2;
+	pt = new Point3[numVerts];
+	int		i;
+	int		idx;
+	float	fAngle = 2*PI/nSegment;
+	float	x, y, z;
 
-    int        i;
-    int        idx;
-    float    fAngle = Angle/nSegment;
-    float    x, y, z;
+	pt[0].set(0, fHeight/2, 0);
+	for(i = 0; i<nSegment; i++)
+	{
+		x = fRadius* cos(fAngle*i);
+		z = fRadius* sin(fAngle*i);
+		y = fHeight/2;
+		pt[i+1].set(x, y, z);
 
-    pt[0].set(0, fHeight/2, 0);
-    for(i = 0; i<nSegment + 1; i++)
-    {
-        x = fRadius * cos(fAngle*i);
-        z = fRadius * sin(fAngle*i);
-        y = fHeight/2;
-        pt[i + 1].set(x, y, z);
-        pt[i + 2 + nSegment].set(x, -y, z);
-    }
-    pt[numVerts-1].set(0, -fHeight/2, 0);
+		y = -fHeight/2;
+		pt[i +1 + nSegment].set(x, y, z);
+	}
+	pt[numVerts-1].set(0, -fHeight/2, 0);
 
-    numFaces= nSegment * 3;
-    face = new Face[numFaces];
+	numFaces= numSegment*3;
+	face = new Face[numFaces];
 
-    idx = 0;
-    for(i = 0; i<nSegment; i++)
-    {
-        face[idx].nVerts = 3;
-        face[idx].vert = new VertexID[face[idx].nVerts];
-        face[idx].vert[0].vertIndex = 0;
-        face[idx].vert[1].vertIndex = i + 1;
-        face[idx].vert[2].vertIndex = i + 2;
-        idx++;
-    }
+	idx = 0;
+	for(i = 0; i<numSegment; i++)
+	{
+		face[i].nVerts = 3;
+		face[i].vert = new VertexID[face[i].nVerts];
+		face[i].vert[0].vertIndex = 0;
+        face[i].vert[1].vertIndex = i < nSegment -1 ? i + 2 : 1;
+		face[i].vert[2].vertIndex = i + 1;
 
-    for(i = 0; i<nSegment; i++)
-    {
-        face[idx].nVerts = 4;
-        face[idx].vert = new VertexID[face[idx].nVerts];
-        
-        face[idx].vert[0].vertIndex = i + 1;
-        face[idx].vert[1].vertIndex = i + 2;
-        face[idx].vert[2].vertIndex = nSegment * 2 + i;
-        face[idx].vert[3].vertIndex = nSegment * 2 - 1 + i;
-        idx++;
-    }
+        face[numSegment+i].nVerts = 4;
+		face[numSegment+i].vert = new VertexID[face[numSegment+i].nVerts];
+		face[numSegment+i].vert[0].vertIndex = i+1;
+        face[numSegment+i].vert[1].vertIndex = i < nSegment - 1 ? i + 2 : 1;
+		face[numSegment+i].vert[2].vertIndex = face[numSegment+i].vert[1].vertIndex + nSegment;
+		face[numSegment+i].vert[3].vertIndex = face[numSegment+i].vert[0].vertIndex + nSegment;
 
-    for(i = 0; i<nSegment; i++)
-    {
-        face[idx].nVerts = 3;
-        face[idx].vert = new VertexID[face[idx].nVerts];
-        face[idx].vert[0].vertIndex = numVerts - 1;
-        face[idx].vert[1].vertIndex = numVerts - nSegment - 1 + i;
-        face[idx].vert[2].vertIndex = numVerts - nSegment + i;
-        idx++;
-    }
+        face[2*numSegment+i].nVerts = 3;
+		face[2*numSegment+i].vert = new VertexID[face[2*numSegment+i].nVerts];
+		face[2*numSegment+i].vert[0].vertIndex = numVerts - 1;
+        face[2*numSegment+i].vert[2].vertIndex = i < nSegment -1 ? i + 2 + nSegment  : 1 + nSegment;
+		face[2*numSegment+i].vert[1].vertIndex = i + 1 + nSegment;
+	}
 }
 
 void Mesh::CreateJoint(int nSegment, float fWidth, float fLength, float fHeight) {
@@ -102,19 +94,19 @@ void Mesh::CreateJoint(int nSegment, float fWidth, float fLength, float fHeight)
 
     numFaces = 2 * nSegment + 4;
     face = new Face[numFaces];
-    
+
 //        Assign points for top and bottom faces
     face[0].nVerts = 2 * nSegment + 2;
     face[0].vert = new VertexID[face[0].nVerts];
     face[1].nVerts = 2 * nSegment + 2;
     face[1].vert = new VertexID[face[1].nVerts];
-    
+
     int idx = 2;
 //        Draw top and bottom faces
     for (int i = 0; i < 2 * nSegment + 2; i++) {
         face[0].vert[i].vertIndex = i;
         face[1].vert[i].vertIndex = 2 * nSegment + 2 + i;
-        
+
 //        Draw side faces
         face[idx].nVerts = 4;
         face[idx].vert = new VertexID[face[idx].nVerts];
@@ -173,7 +165,7 @@ void Mesh::CreateCylinder(int nSegment, float fHeight, float fRadius)
     {
         face[idx].nVerts = 4;
         face[idx].vert = new VertexID[face[idx].nVerts];
-        
+
         face[idx].vert[0].vertIndex = i+1;
         if(i <nSegment - 1)
             face[idx].vert[1].vertIndex = i+2;
@@ -228,7 +220,7 @@ void Mesh::CreateCube(float fSize)
     face[0].vert[3].vertIndex = 2;
     for(i = 0; i<face[0].nVerts ; i++)
         face[0].vert[i].colorIndex = 0;
-    
+
     //Right face
     face[1].nVerts = 4;
     face[1].vert = new VertexID[face[1].nVerts];
@@ -302,7 +294,7 @@ void Mesh::CreateTetrahedron()
     face[0].vert[2].vertIndex = 3;
     for(i = 0; i<face[0].nVerts ; i++)
         face[0].vert[i].colorIndex = 0;
-    
+
 
     face[1].nVerts = 3;
     face[1].vert = new VertexID[face[1].nVerts];
@@ -312,7 +304,7 @@ void Mesh::CreateTetrahedron()
     for(i = 0; i<face[1].nVerts ; i++)
         face[1].vert[i].colorIndex = 1;
 
-    
+
     face[2].nVerts = 3;
     face[2].vert = new VertexID[face[2].nVerts];
     face[2].vert[0].vertIndex = 0;
@@ -358,7 +350,7 @@ void Mesh::DrawColor()
         {
             int        iv = face[f].vert[v].vertIndex;
             int        ic = face[f].vert[v].colorIndex;
-            
+
             ic = f % COLORNUM;
 
             glColor3f(ColorArr[ic][0], ColorArr[ic][1], ColorArr[ic][2]);

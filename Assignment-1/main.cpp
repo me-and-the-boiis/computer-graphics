@@ -2,7 +2,7 @@
 //
 
 #define GL_SILENCE_DEPRECATION
-
+#include <windows.h>
 #include <math.h>
 #include <iostream>
 #include "supportClass.h"
@@ -55,9 +55,9 @@ void myDisplay()
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glViewport(0, 0, screenWidth/2, screenHeight);
-    
+
     glRotatef(angle, 0, 1, 0);
-    
+
     drawAxis();
 
     glColor3f(0, 0, 0);
@@ -112,12 +112,12 @@ int main(int argc, char* argv[])
 
     tetrahedron.CreateTetrahedron();
     cube.CreateCylinder(4, 2, 2);
-    ahihi.CreateCylinder(3, PI, 2, 2);
+    ahihi.CreateCylinder(20, PI, 2, 2);
 
     myInit();
     glutDisplayFunc(myDisplay);
     glutSpecialFunc(mySpecialFunc);
-      
+
     glutMainLoop();
     return 0;
 }

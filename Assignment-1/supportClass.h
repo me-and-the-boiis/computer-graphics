@@ -3,8 +3,12 @@
 #if !defined (_SUPPORT_CLASS)
 #define _SUPPORT_CLASS
 
+
+#include <windows.h>
+#include <gl/gl.h>
+#include <gl/glut.h>
+//#include <GLUT/GLUT.h>
 #include <math.h>
-#include <GLUT/GLUT.h>
 
 class Point3
 {
