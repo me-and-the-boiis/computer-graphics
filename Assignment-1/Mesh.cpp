@@ -24,7 +24,7 @@ float    ColorArr[COLORNUM][3] = {
     {1.0, 1.0, 1.0}
 };
 
-void Mesh::CreateCylinder(int nSegment, float Angle, float fHeight, float fRadius) {
+void Mesh::CreatePizza(int nSegment, float Angle, float fHeight, float fRadius) {
     int numSegment = roundf(Angle/(2*PI)*nSegment);
 	numVerts=nSegment*2 + 2;
 	pt = new Point3[numVerts];
@@ -33,21 +33,39 @@ void Mesh::CreateCylinder(int nSegment, float Angle, float fHeight, float fRadiu
 	float	fAngle = 2*PI/nSegment;
 	float	x, y, z;
 
-	pt[0].set(0, fHeight/2, 0);
+	pt[0].set(0, fHeight, 0);
 	for(i = 0; i<nSegment; i++)
 	{
 		x = fRadius* cos(fAngle*i);
 		z = fRadius* sin(fAngle*i);
-		y = fHeight/2;
+		y = fHeight;
 		pt[i+1].set(x, y, z);
 
-		y = -fHeight/2;
+		y = 0;
 		pt[i +1 + nSegment].set(x, y, z);
 	}
-	pt[numVerts-1].set(0, -fHeight/2, 0);
+	pt[numVerts-1].set(0, 0, 0);
 
-	numFaces= numSegment*3;
-	face = new Face[numFaces];
+
+	if (numSegment*3 < nSegment*3) {
+        numFaces = numSegment*3+2;
+        face = new Face[numFaces];
+        face[numFaces-1].nVerts = 4;
+        face[numFaces-1].vert = new VertexID[4];
+        face[numFaces-1].vert[0].vertIndex = 0;
+        face[numFaces-1].vert[1].vertIndex = 1;
+        face[numFaces-1].vert[2].vertIndex = nSegment + 1;
+        face[numFaces-1].vert[3].vertIndex = numVerts - 1;
+        face[numFaces-2].nVerts = 4;
+        face[numFaces-2].vert = new VertexID[4];
+        face[numFaces-2].vert[0].vertIndex = 0;
+        face[numFaces-2].vert[1].vertIndex = numSegment + 1;
+        face[numFaces-2].vert[2].vertIndex = nSegment + 1 + numSegment;
+        face[numFaces-2].vert[3].vertIndex = numVerts - 1;
+	} else {
+        numFaces= nSegment*3;
+        face = new Face[numFaces];
+	}
 
 	idx = 0;
 	for(i = 0; i<numSegment; i++)
@@ -121,208 +139,138 @@ void Mesh::CreateJoint(int nSegment, float fWidth, float fLength, float fHeight)
 
 }
 
-void Mesh::CreateCylinder(int nSegment, float fHeight, float fRadius)
+void Mesh::CreatePismatic(float fHeight, float x, float x0, float z0, float x1, float z1)
 {
-    numVerts=nSegment*2 + 2;
-    pt = new Point3[numVerts];
+    if ((x1 == -10) && (z0 != -10) && (x0 != -10))
+        numFaces=5;
+    else
+        numFaces=6;
 
-    int        i;
-    int        idx;
-    float    fAngle = 2*PI/nSegment;
-    float    x, y, z;
-
-    pt[0].set(0, fHeight/2, 0);
-    for(i = 0; i<nSegment; i++)
-    {
-        x = fRadius* cos(fAngle*i);
-        z = fRadius* sin(fAngle*i);
-        y = fHeight/2;
-        pt[i+1].set(x, y, z);
-
-        y = -fHeight/2;
-        pt[i +1 + nSegment].set(x, y, z);
-    }
-    pt[numVerts-1].set(0, -fHeight/2, 0);
-
-    numFaces= nSegment*3;
-    face = new Face[numFaces];
-
-    idx = 0;
-    for(i = 0; i<nSegment; i++)
-    {
-        face[idx].nVerts = 3;
-        face[idx].vert = new VertexID[face[idx].nVerts];
-        face[idx].vert[0].vertIndex = 0;
-        if(i < nSegment -1)
-            face[idx].vert[1].vertIndex = i + 2;
-        else
-            face[idx].vert[1].vertIndex = 1;
-        face[idx].vert[2].vertIndex = i + 1;
-        idx++;
+    if (x0 == -10) {
+        x0 = x;
+        z0 = x;
+        x1 = 0;
+        z1 = x;
+    } else {
+        if (z0 == -10) {
+            x1 = 0;
+            z1 = x0;
+            z0 = x0;
+            x0 = x;
+        } else {
+            x1 = x1==-10?0:x1;
+            z1 = z1==-10?0:z1;
+        }
     }
 
-    for(i = 0; i<nSegment; i++)
-    {
-        face[idx].nVerts = 4;
-        face[idx].vert = new VertexID[face[idx].nVerts];
+	numVerts=8;
+	pt = new Point3[numVerts];
+	pt[0].set(0, fHeight, 0);
+	pt[1].set( x, fHeight, 0);
+	pt[2].set( x0, fHeight, z0);
+	pt[3].set(x1, fHeight, z1);
+	pt[4].set(0, 0, 0);
+	pt[5].set( x, 0, 0);
+	pt[6].set( x0, 0, z0);
+	pt[7].set(x1, 0, z1);
 
-        face[idx].vert[0].vertIndex = i+1;
-        if(i <nSegment - 1)
-            face[idx].vert[1].vertIndex = i+2;
-        else
-            face[idx].vert[1].vertIndex = 1;
-        face[idx].vert[2].vertIndex = face[idx].vert[1].vertIndex + nSegment;
-        face[idx].vert[3].vertIndex = face[idx].vert[0].vertIndex + nSegment;
+	face = new Face[6];
 
-        idx++;
-    }
-
-    for(i = 0; i<nSegment; i++)
-    {
-        face[idx].nVerts = 3;
-        face[idx].vert = new VertexID[face[idx].nVerts];
-        face[idx].vert[0].vertIndex = numVerts - 1;
-        if(i < nSegment -1)
-            face[idx].vert[2].vertIndex = i + 2 + nSegment;
-        else
-            face[idx].vert[2].vertIndex = 1 + nSegment;
-        face[idx].vert[1].vertIndex = i + 1 + nSegment;
-        idx++;
-    }
-
-}
-
-void Mesh::CreateCube(float fSize)
-{
-    int i;
-
-    numVerts=8;
-    pt = new Point3[numVerts];
-    pt[0].set(-fSize, fSize, fSize);
-    pt[1].set( fSize, fSize, fSize);
-    pt[2].set( fSize, fSize, -fSize);
-    pt[3].set(-fSize, fSize, -fSize);
-    pt[4].set(-fSize, -fSize, fSize);
-    pt[5].set( fSize, -fSize, fSize);
-    pt[6].set( fSize, -fSize, -fSize);
-    pt[7].set(-fSize, -fSize, -fSize);
-
-
-    numFaces= 6;
-    face = new Face[numFaces];
-
-    //Left face
     face[0].nVerts = 4;
-    face[0].vert = new VertexID[face[0].nVerts];
-    face[0].vert[0].vertIndex = 1;
-    face[0].vert[1].vertIndex = 5;
-    face[0].vert[2].vertIndex = 6;
-    face[0].vert[3].vertIndex = 2;
-    for(i = 0; i<face[0].nVerts ; i++)
-        face[0].vert[i].colorIndex = 0;
-
-    //Right face
     face[1].nVerts = 4;
-    face[1].vert = new VertexID[face[1].nVerts];
-    face[1].vert[0].vertIndex = 0;
-    face[1].vert[1].vertIndex = 3;
-    face[1].vert[2].vertIndex = 7;
-    face[1].vert[3].vertIndex = 4;
-    for(i = 0; i<face[1].nVerts ; i++)
-        face[1].vert[i].colorIndex = 1;
+    face[0].vert = new VertexID[4];
+    face[1].vert = new VertexID[4];
 
-    //top face
-    face[2].nVerts = 4;
-    face[2].vert = new VertexID[face[2].nVerts];
-    face[2].vert[0].vertIndex = 0;
-    face[2].vert[1].vertIndex = 1;
-    face[2].vert[2].vertIndex = 2;
-    face[2].vert[3].vertIndex = 3;
-    for(i = 0; i<face[2].nVerts ; i++)
-        face[2].vert[i].colorIndex = 2;
-
-    //bottom face
-    face[3].nVerts = 4;
-    face[3].vert = new VertexID[face[3].nVerts];
-    face[3].vert[0].vertIndex = 7;
-    face[3].vert[1].vertIndex = 6;
-    face[3].vert[2].vertIndex = 5;
-    face[3].vert[3].vertIndex = 4;
-    for(i = 0; i<face[3].nVerts ; i++)
-        face[3].vert[i].colorIndex = 3;
-
-    //near face
-    face[4].nVerts = 4;
-    face[4].vert = new VertexID[face[4].nVerts];
-    face[4].vert[0].vertIndex = 4;
-    face[4].vert[1].vertIndex = 5;
-    face[4].vert[2].vertIndex = 1;
-    face[4].vert[3].vertIndex = 0;
-    for(i = 0; i<face[4].nVerts ; i++)
-        face[4].vert[i].colorIndex = 4;
-
-    //Far face
-    face[5].nVerts = 4;
-    face[5].vert = new VertexID[face[5].nVerts];
-    face[5].vert[0].vertIndex = 3;
-    face[5].vert[1].vertIndex = 2;
-    face[5].vert[2].vertIndex = 6;
-    face[5].vert[3].vertIndex = 7;
-    for(i = 0; i<face[5].nVerts ; i++)
-        face[5].vert[i].colorIndex = 5;
-
+    for (int i = 0; i<4; i++) {
+        face[0].vert[i].vertIndex = i;
+        face[1].vert[i].vertIndex = 4+i;
+        face[i+2].nVerts = 4;
+        face[i+2].vert = new VertexID[4];
+        face[i+2].vert[0].vertIndex = i;
+        face[i+2].vert[1].vertIndex = i < 3 ? i + 1 : 0;
+		face[i+2].vert[2].vertIndex = i < 3 ? 5 + i : 4;
+		face[i+2].vert[3].vertIndex = 4 + i;
+    }
 }
 
+void Mesh::DrawShape1() {
+    glPushMatrix();
+    Mesh pizzaPidiv2;
+    glTranslatef(0, 0, 7);
+    pizzaPidiv2.CreatePizza(20, PI/2, 1, 1);
+    pizzaPidiv2.DrawColor();
+    glPopMatrix();
 
-void Mesh::CreateTetrahedron()
-{
-    int i;
-    numVerts=4;
-    pt = new Point3[numVerts];
-    pt[0].set(0, 0, 0);
-    pt[1].set(1, 0, 0);
-    pt[2].set(0, 1, 0);
-    pt[3].set(0, 0, 1);
-
-    numFaces= 4;
-    face = new Face[numFaces];
-
-    face[0].nVerts = 3;
-    face[0].vert = new VertexID[face[0].nVerts];
-    face[0].vert[0].vertIndex = 1;
-    face[0].vert[1].vertIndex = 2;
-    face[0].vert[2].vertIndex = 3;
-    for(i = 0; i<face[0].nVerts ; i++)
-        face[0].vert[i].colorIndex = 0;
-
-
-    face[1].nVerts = 3;
-    face[1].vert = new VertexID[face[1].nVerts];
-    face[1].vert[0].vertIndex = 0;
-    face[1].vert[1].vertIndex = 2;
-    face[1].vert[2].vertIndex = 1;
-    for(i = 0; i<face[1].nVerts ; i++)
-        face[1].vert[i].colorIndex = 1;
-
-
-    face[2].nVerts = 3;
-    face[2].vert = new VertexID[face[2].nVerts];
-    face[2].vert[0].vertIndex = 0;
-    face[2].vert[1].vertIndex = 3;
-    face[2].vert[2].vertIndex = 2;
-    for(i = 0; i<face[2].nVerts ; i++)
-        face[2].vert[i].colorIndex = 2;
-
-
-    face[3].nVerts = 3;
-    face[3].vert = new VertexID[face[3].nVerts];
-    face[3].vert[0].vertIndex = 1;
-    face[3].vert[1].vertIndex = 3;
-    face[3].vert[2].vertIndex = 0;
-    for(i = 0; i<face[3].nVerts ; i++)
-        face[3].vert[i].colorIndex = 3;
+    Mesh pismaticBody;
+    pismaticBody.CreatePismatic(1, 1.5, 1, 7, 0, 7);
+    pismaticBody.DrawColor();
 }
 
+void Mesh::DrawShape2() {
+    Mesh pizzaPidiv2;
+    Mesh pismaticBody;
+}
+
+void Mesh::DrawShape3() {
+    const float height = 0.5;
+    glPushMatrix();
+    Mesh fourthQuad;
+    fourthQuad.CreatePismatic(height, 1, 4);
+    fourthQuad.DrawWireframe();
+
+    glTranslatef(0, 0, 4);
+    Mesh secondQuad;
+    secondQuad.CreatePismatic(height, 1, 1.5, 1, 0, 2);
+    secondQuad.DrawWireframe();
+
+    float alpha = atan(0.5);
+    glTranslatef(1.5, 0, 1);
+    glRotatef(2*alpha/(2*PI)*360, 0, 1, 0);
+    Mesh thirdTriangle;
+    thirdTriangle.CreatePismatic(height, 0.5, 0.5, -1);
+    thirdTriangle.DrawWireframe();
+
+    Mesh pizza2div3PI;
+    pizza2div3PI.CreatePizza(30, 2*PI/3, height, 0.5);
+    pizza2div3PI.DrawWireframe();
+
+    float alpha3 = 2*PI - (atan(2)*2+atan(2./3)+2*PI/3);
+    glRotatef(-(120+alpha3/(2*PI)*360), 0, 1, 0);
+    Mesh firstTriangle;
+    firstTriangle.CreatePismatic(height, sqrt(1+1.5*1.5), 0.5*cos(alpha3), -0.5*sin(alpha3));
+    firstTriangle.DrawWireframe();
+
+
+//
+//
+
+//
+//    alpha = atan(0.5);
+//    glTranslatef(1, 0, 1.5);
+
+//    glTranslatef(-0.5, 0, 0);
+
+//
+//    glTranslatef(0.5, 0, 0);
+//    glRotatef(-(90-2*(alpha/(2*PI)*360))    , 0, 1, 0);
+
+
+
+    glPopMatrix();
+//    Mesh pismaticBody;
+//    pismaticBody.CreatePismatic(1, 1, 1, 5, 0, 3.5);
+//    pismaticBody.DrawColor();
+}
+
+void Mesh::DrawShape4() {
+    Mesh pizzaPidiv2;
+    Mesh pismaticBody;
+}
+
+void Mesh::DrawShape5() {
+    Mesh pizzaPidiv2;
+    Mesh pismaticBody;
+}
 
 void Mesh::DrawWireframe()
 {
@@ -359,6 +307,3 @@ void Mesh::DrawColor()
         glEnd();
     }
 }
-
-
-

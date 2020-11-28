@@ -16,7 +16,7 @@ class Face
 public:
     int        nVerts;
     VertexID*    vert;
-    
+
     Face()
     {
         nVerts    = 0;
@@ -38,7 +38,7 @@ class Mesh
 public:
     int        numVerts;
     Point3*        pt;
-    
+
     int        numFaces;
     Face*        face;
 public:
@@ -65,11 +65,14 @@ public:
     void DrawWireframe();
     void DrawColor();
 
-    void CreateTetrahedron();
-    void CreateCube(float fSize);
-    void CreateCylinder(int nSegment, float fHeight, float fRadius);
-    void CreateCylinder(int nSegment, float fAngle, float fHeight, float fRadius);
+    void CreatePizza(int nSegment, float fAngle, float fHeight, float fRadius);
     void CreateJoint(int nSegment, float fWidth, float fLength, float fHeight);
+    void CreatePismatic(float fHeight, float x, float x0 = -10, float z0 = -10, float x1 = -10, float z1 = -10);
+    void DrawShape1();
+    void DrawShape2();
+    void DrawShape3();
+    void DrawShape4();
+    void DrawShape5();
 };
 
 #endif

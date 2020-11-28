@@ -3,7 +3,12 @@
 
 #define GL_SILENCE_DEPRECATION
 
-#include <GLUT/GLUT.h>
+//#include <GLUT/GLUT.h>
+
+#include <gl/gl.h>
+#include <gl/glut.h>
+#include <windows.h>
+
 #include <math.h>
 #include <iostream>
 #include "supportClass.h"
@@ -13,26 +18,27 @@
 
 using namespace std;
 
-int        screenWidth = 800;
-int        screenHeight= 800;
+int        screenWidth = 600;
+int        screenHeight= 600;
 
-Mesh    tetrahedron;
-Mesh    cube;
-Mesh    cylinder;
-Mesh    ahihi;
+Mesh    shape1;
+Mesh    shape2;
+Mesh    shape3;
+Mesh    shape4;
+Mesh    shape5;
 
 int        nChoice = 1;
 
-float cameraAngle = 1;
-float cameraHeight = 1;
+float cameraAngle = 45;
+float cameraHeight = 0;
 float cameraDistance = 1.25;
 
 void mySpecialFunc(int key, int x, int y) {
     if (key == GLUT_KEY_LEFT) {
-        cameraAngle += 5;
+        cameraAngle += 3;
     }
     else if (key == GLUT_KEY_RIGHT) {
-        cameraAngle -= 5;
+        cameraAngle -= 3;
     }
     else if (key == GLUT_KEY_UP) {
         cameraHeight += 0.25;
@@ -79,7 +85,7 @@ void myDisplay()
     );
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glViewport(0, 0, screenWidth*1.5, screenHeight*1.5);
+    glViewport(0, 0, screenWidth, screenHeight);
 
     glRotatef(cameraAngle, 0, 1, 0);
     glScalef(1*cameraDistance, 1*cameraDistance, 1*cameraDistance);
@@ -88,20 +94,16 @@ void myDisplay()
 
     glColor3f(0, 0, 0);
     if (nChoice == 1)
-        tetrahedron.DrawWireframe();
+        shape1.DrawShape1();
     else if (nChoice == 2)
-        cube.DrawWireframe();
+        shape2.DrawShape2();
     else if (nChoice == 3)
-        ahihi.DrawWireframe();
+        shape3.DrawShape3();
+    else if (nChoice == 4)
+        shape4.DrawShape4();
+    else if (nChoice == 5)
+        shape5.DrawShape5();
 
-//    glViewport(screenWidth/2, 0, screenWidth/2, screenHeight);
-//    drawAxis();
-//    if(nChoice == 1)
-//        tetrahedron.DrawColor();
-//    else if(nChoice == 2)
-//        cube.DrawColor();
-//    else if(nChoice == 3)
-//        ahihi.DrawColor();
 
     glFlush();
     glutSwapBuffers();
@@ -109,7 +111,7 @@ void myDisplay()
 
 void myInit()
 {
-    float    fHalfSize = 3;
+    float    fHalfSize = 8;
 
     glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 
@@ -118,14 +120,18 @@ void myInit()
 
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
+
     glOrtho(-fHalfSize, fHalfSize, -fHalfSize, fHalfSize, -1000, 1000);
+    gluLookAt(20, 20, 20, 0, 0, 0, 0, 1, 0);
 }
 
 int main(int argc, char* argv[])
 {
-    cout << "1. Tetrahedron" << endl;
-    cout << "2. Cube" << endl;
-    cout << "3. Cylinder" << endl;
+    cout << "1. Draw shape 1" << endl;
+    cout << "2. Draw shape 2" << endl;
+    cout << "3. Draw shape 3" << endl;
+    cout << "4. Draw shape 4" << endl;
+    cout << "5. Draw shape 5" << endl;
     cout << "Input the choice: " << endl;
     cin  >> nChoice;
 
@@ -134,10 +140,6 @@ int main(int argc, char* argv[])
     glutInitWindowSize(screenWidth, screenHeight); //set window size
     glutInitWindowPosition(100, 100); // set window position on screen
     glutCreateWindow("Lab 2"); // open the screen window
-
-    tetrahedron.CreateTetrahedron();
-    cube.CreateCylinder(4, 2, 2);
-    ahihi.CreateJoint(20, 2, 4, 2);
 
     myInit();
     glutDisplayFunc(myDisplay);
