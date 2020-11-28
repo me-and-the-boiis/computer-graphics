@@ -6,7 +6,9 @@
 #define PI            3.1415926
 #define    COLORNUM        14
 
-
+float radianToDegree(float radian) {
+    return radian*180/PI;
+}
 float    ColorArr[COLORNUM][3] = {
     {1.0, 0.0, 0.0},
     {0.0, 1.0, 0.0},
@@ -194,15 +196,16 @@ void Mesh::CreatePismatic(float fHeight, float x, float x0, float z0, float x1, 
 }
 
 void Mesh::DrawShape1() {
+    const float height = 0.5;
     glPushMatrix();
     Mesh pizzaPidiv2;
     glTranslatef(0, 0, 7);
-    pizzaPidiv2.CreatePizza(20, PI/2, 1, 1);
+    pizzaPidiv2.CreatePizza(20, PI/2, height, 1);
     pizzaPidiv2.DrawColor();
     glPopMatrix();
 
     Mesh pismaticBody;
-    pismaticBody.CreatePismatic(1, 1.5, 1, 7, 0, 7);
+    pismaticBody.CreatePismatic(height, 1.5, 1, 7, 0, 7);
     pismaticBody.DrawColor();
 }
 
@@ -263,8 +266,35 @@ void Mesh::DrawShape3() {
 }
 
 void Mesh::DrawShape4() {
-    Mesh pizzaPidiv2;
-    Mesh pismaticBody;
+    const float height = 0.5;
+    glPushMatrix();
+    Mesh fourthQuad;
+    float h = sqrt(1.2*1.2+1-0.7*0.7);
+    float xPoint2 = 2.7 + sqrt(1.2*1.2+1-0.7*0.7);
+    fourthQuad.CreatePismatic(height, 2.7, xPoint2, 0.7, 0, 3);
+    fourthQuad.DrawWireframe();
+
+    glTranslatef(2.7, 0, 0);
+
+    float a = sqrt(1.2*1.2+0.5*0.5);
+    float b = sqrt(1.2*1.2+1);
+    float beta = acos((a*a+b*b-0.5*0.5)/(2*a*b));
+    float miniAlpha = PI/2 - beta - atan(h/0.7);
+    float alpha = atan(0.5/1.2) - miniAlpha;
+
+    glRotatef(radianToDegree(alpha), 0, 1, 0);
+
+    Mesh firstTriangle;
+    firstTriangle.CreatePismatic(height, 1.2, 1.2, 1);
+    firstTriangle.DrawWireframe();
+
+    glTranslatef(1.2, 0, 0.5);
+    glRotatef(90, 0, 1, 0);
+    Mesh pizzaPi;
+    pizzaPi.CreatePizza(30, PI, height, 0.5);
+    pizzaPi.DrawWireframe();
+
+
 }
 
 void Mesh::DrawShape5() {
