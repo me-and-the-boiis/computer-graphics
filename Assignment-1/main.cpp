@@ -2,7 +2,8 @@
 //
 
 #define GL_SILENCE_DEPRECATION
-#include <windows.h>
+
+#include <GLUT/GLUT.h>
 #include <math.h>
 #include <iostream>
 #include "supportClass.h"
@@ -12,8 +13,8 @@
 
 using namespace std;
 
-int        screenWidth = 600;
-int        screenHeight= 300;
+int        screenWidth = 800;
+int        screenHeight= 800;
 
 Mesh    tetrahedron;
 Mesh    cube;
@@ -22,13 +23,32 @@ Mesh    ahihi;
 
 int        nChoice = 1;
 
-float angle;
+float cameraAngle = 1;
+float cameraHeight = 1;
+float cameraDistance = 1.25;
+
 void mySpecialFunc(int key, int x, int y) {
     if (key == GLUT_KEY_LEFT) {
-        angle += 5;
+        cameraAngle += 5;
     }
     else if (key == GLUT_KEY_RIGHT) {
-        angle -= 5;
+        cameraAngle -= 5;
+    }
+    else if (key == GLUT_KEY_UP) {
+        cameraHeight += 0.25;
+    }
+    else if (key == GLUT_KEY_DOWN) {
+        cameraHeight -= 0.25;
+    }
+    glutPostRedisplay();
+}
+
+void myKeyboard(unsigned char key, int x, int y) {
+    if (key == '+') {
+        cameraDistance += 0.05;
+    }
+    else if (key == '-') {
+        cameraDistance -= 0.05;
     }
     glutPostRedisplay();
 }
@@ -51,12 +71,18 @@ void myDisplay()
 {
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
-    gluLookAt(4.5, 4, 2, 0, 0, 0, 0, 1, 0);
+    gluLookAt(
+          cameraDistance*cos(cameraAngle/360*2*PI),
+          cameraHeight,
+          cameraDistance*sin(cameraAngle/360*2*PI),
+          0.0, 0.0, 0.0, 0, 1, 0
+    );
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glViewport(0, 0, screenWidth/2, screenHeight);
+    glViewport(0, 0, screenWidth*1.5, screenHeight*1.5);
 
-    glRotatef(angle, 0, 1, 0);
+    glRotatef(cameraAngle, 0, 1, 0);
+    glScalef(1*cameraDistance, 1*cameraDistance, 1*cameraDistance);
 
     drawAxis();
 
@@ -68,15 +94,14 @@ void myDisplay()
     else if (nChoice == 3)
         ahihi.DrawWireframe();
 
-    glViewport(screenWidth/2, 0, screenWidth/2, screenHeight);
-
-    drawAxis();
-    if(nChoice == 1)
-        tetrahedron.DrawColor();
-    else if(nChoice == 2)
-        cube.DrawColor();
-    else if(nChoice == 3)
-        ahihi.DrawColor();
+//    glViewport(screenWidth/2, 0, screenWidth/2, screenHeight);
+//    drawAxis();
+//    if(nChoice == 1)
+//        tetrahedron.DrawColor();
+//    else if(nChoice == 2)
+//        cube.DrawColor();
+//    else if(nChoice == 3)
+//        ahihi.DrawColor();
 
     glFlush();
     glutSwapBuffers();
@@ -84,7 +109,7 @@ void myDisplay()
 
 void myInit()
 {
-    float    fHalfSize = 4;
+    float    fHalfSize = 3;
 
     glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 
@@ -112,11 +137,12 @@ int main(int argc, char* argv[])
 
     tetrahedron.CreateTetrahedron();
     cube.CreateCylinder(4, 2, 2);
-    ahihi.CreateCylinder(20, PI, 2, 2);
+    ahihi.CreateJoint(20, 2, 4, 2);
 
     myInit();
     glutDisplayFunc(myDisplay);
     glutSpecialFunc(mySpecialFunc);
+    glutKeyboardFunc(myKeyboard);
 
     glutMainLoop();
     return 0;
