@@ -91,7 +91,7 @@ void Mesh::CreatePizza(int nSegment, float Angle, float fHeight, float fRadius) 
         face[2*numSegment+i].vert[2].vertIndex = i < nSegment -1 ? i + 2 + nSegment  : 1 + nSegment;
 		face[2*numSegment+i].vert[1].vertIndex = i + 1 + nSegment;
 	}
-    
+
     CalculateFacesNorm();
 }
 
@@ -140,7 +140,7 @@ void Mesh::CreateJoint(int nSegment, float fWidth, float fLength, float fHeight)
         face[idx].vert[3].vertIndex = 2 * nSegment + 2 + i;
         idx++;
     }
-    
+
     CalculateFacesNorm();
 }
 
@@ -196,7 +196,7 @@ void Mesh::CreatePismatic(float fHeight, float x, float x0, float z0, float x1, 
 		face[i+2].vert[2].vertIndex = i < 3 ? 5 + i : 4;
 		face[i+2].vert[3].vertIndex = 4 + i;
     }
-    
+
     CalculateFacesNorm();
 }
 
@@ -357,7 +357,7 @@ void Mesh::DrawShape5(int nSegment, float fWidth, float fLength, float fHeight) 
         face[idx].vert[3].vertIndex = 2 * nSegment + 2 + i;
         idx++;
     }
-    
+
     CalculateFacesNorm();
 }
 
@@ -437,5 +437,59 @@ void Mesh::Draw() {
             glVertex3f(pt[iv].x, pt[iv].y, pt[iv].z);
         }
         glEnd();
+    }
+}
+
+
+void setupMaterial(float ambient[], float diffuse[], float specular[], float shiness) {
+    glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, ambient);
+    glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, diffuse);
+    glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, specular);
+    glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, shiness);
+}
+
+
+void Mesh::BigDraw() {
+    Mesh    shape;
+    int nChoice = 3;
+    if (nChoice == 1) {
+        float ambient[] = { 0.105882f, 0.058824f, 0.113725f, 1.0f };
+        float diffuse[] = { 0.427451f, 0.470588f, 0.541176f, 1.0f };
+        float specular[] = { 0.333333f, 0.333333f, 0.521569f, 1.0f };
+        float shininess = 9.84615f;
+        setupMaterial(ambient, diffuse, specular, shininess);
+        shape.DrawShape1();
+    }
+    else if (nChoice == 2) {
+        float ambient[] = { 0.1745f, 0.01175f, 0.01175f, 0.55f };
+        float diffuse[] = { 0.61424f, 0.04136f, 0.04136f, 0.55f };
+        float specular[] = { 0.727811f, 0.626959f, 0.626959f, 0.55f };
+        float shininess = 76.8f;
+        setupMaterial(ambient, diffuse, specular, shininess);
+        shape.DrawShape2();
+    }
+    else if (nChoice == 3) {
+        float ambient[] = { 0.2295f, 0.08825f, 0.0275f, 1.0f };
+        float diffuse[] = { 0.5508f, 0.2118f, 0.066f, 1.0f };
+        float specular[] = { 0.580594f, 0.223257f, 0.0695701f, 1.0f };
+        float shininess = 51.2f;
+        setupMaterial(ambient, diffuse, specular, shininess);
+        shape.DrawShape3();
+    }
+    else if (nChoice == 4) {
+        float ambient[] = { 0.0215f, 0.1745f, 0.0215f, 0.55f };
+        float diffuse[] = { 0.07568f, 0.61424f, 0.07568f, 0.55f };
+        float specular[] = { 0.633f, 0.727811f, 0.633f, 0.55f };
+        float shininess = 76.8f;
+        setupMaterial(ambient, diffuse, specular, shininess);
+        shape.DrawShape4();
+    }
+    else if (nChoice == 5) {
+        float ambient[] = { 0.05f, 0.05f, 0.05f, 1.0f };
+        float diffuse[] = { 0.5f, 0.5f, 0.5f, 1.0f};
+        float specular[] = { 0.7f, 0.7f, 0.7f, 1.0f };
+        float shininess = 10.0f;
+        setupMaterial(ambient, diffuse, specular, shininess);
+        shape.DrawShape5(15, 1, 1, 1);
     }
 }

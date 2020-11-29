@@ -67,6 +67,7 @@ public:
     void DrawColor();
     void CalculateFacesNorm();
     void Draw();
+    void BigDraw();
 
     void CreatePizza(int nSegment, float fAngle, float fHeight, float fRadius);
     void CreateJoint(int nSegment, float fWidth, float fLength, float fHeight);
