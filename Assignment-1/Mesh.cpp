@@ -91,6 +91,8 @@ void Mesh::CreatePizza(int nSegment, float Angle, float fHeight, float fRadius) 
         face[2*numSegment+i].vert[2].vertIndex = i < nSegment -1 ? i + 2 + nSegment  : 1 + nSegment;
 		face[2*numSegment+i].vert[1].vertIndex = i + 1 + nSegment;
 	}
+    
+    CalculateFacesNorm();
 }
 
 void Mesh::CreateJoint(int nSegment, float fWidth, float fLength, float fHeight) {
@@ -138,7 +140,8 @@ void Mesh::CreateJoint(int nSegment, float fWidth, float fLength, float fHeight)
         face[idx].vert[3].vertIndex = 2 * nSegment + 2 + i;
         idx++;
     }
-
+    
+    CalculateFacesNorm();
 }
 
 void Mesh::CreatePismatic(float fHeight, float x, float x0, float z0, float x1, float z1)
@@ -184,7 +187,7 @@ void Mesh::CreatePismatic(float fHeight, float x, float x0, float z0, float x1, 
     face[1].vert = new VertexID[4];
 
     for (int i = 0; i<4; i++) {
-        face[0].vert[i].vertIndex = i;
+        face[0].vert[i].vertIndex = 3-i;
         face[1].vert[i].vertIndex = 4+i;
         face[i+2].nVerts = 4;
         face[i+2].vert = new VertexID[4];
@@ -193,6 +196,8 @@ void Mesh::CreatePismatic(float fHeight, float x, float x0, float z0, float x1, 
 		face[i+2].vert[2].vertIndex = i < 3 ? 5 + i : 4;
 		face[i+2].vert[3].vertIndex = 4 + i;
     }
+    
+    CalculateFacesNorm();
 }
 
 void Mesh::DrawShape1() {
@@ -201,12 +206,12 @@ void Mesh::DrawShape1() {
     Mesh pizzaPidiv2;
     glTranslatef(0, 0, 7);
     pizzaPidiv2.CreatePizza(20, PI/2, height, 1);
-    pizzaPidiv2.DrawColor();
+    pizzaPidiv2.Draw();
     glPopMatrix();
 
     Mesh pismaticBody;
     pismaticBody.CreatePismatic(height, 1.5, 1, 7, 0, 7);
-    pismaticBody.DrawColor();
+    pismaticBody.Draw();
 }
 
 void Mesh::DrawShape2() {
@@ -219,29 +224,29 @@ void Mesh::DrawShape3() {
     glPushMatrix();
     Mesh fourthQuad;
     fourthQuad.CreatePismatic(height, 1, 4);
-    fourthQuad.DrawWireframe();
+    fourthQuad.Draw();
 
     glTranslatef(0, 0, 4);
     Mesh secondQuad;
     secondQuad.CreatePismatic(height, 1, 1.5, 1, 0, 2);
-    secondQuad.DrawWireframe();
+    secondQuad.Draw();
 
     float alpha = atan(0.5);
     glTranslatef(1.5, 0, 1);
     glRotatef(2*alpha/(2*PI)*360, 0, 1, 0);
     Mesh thirdTriangle;
     thirdTriangle.CreatePismatic(height, 0.5, 0.5, -1);
-    thirdTriangle.DrawWireframe();
+    thirdTriangle.Draw();
 
     Mesh pizza2div3PI;
     pizza2div3PI.CreatePizza(30, 2*PI/3, height, 0.5);
-    pizza2div3PI.DrawWireframe();
+    pizza2div3PI.Draw();
 
     float alpha3 = 2*PI - (atan(2)*2+atan(2./3)+2*PI/3);
     glRotatef(-(120+alpha3/(2*PI)*360), 0, 1, 0);
     Mesh firstTriangle;
     firstTriangle.CreatePismatic(height, sqrt(1+1.5*1.5), 0.5*cos(alpha3), -0.5*sin(alpha3));
-    firstTriangle.DrawWireframe();
+    firstTriangle.Draw();
 
 
 //
@@ -272,7 +277,7 @@ void Mesh::DrawShape4() {
     float h = sqrt(1.2*1.2+1-0.7*0.7);
     float xPoint2 = 2.7 + sqrt(1.2*1.2+1-0.7*0.7);
     fourthQuad.CreatePismatic(height, 2.7, xPoint2, 0.7, 0, 3);
-    fourthQuad.DrawWireframe();
+    fourthQuad.Draw();
 
     glTranslatef(2.7, 0, 0);
 
@@ -286,20 +291,62 @@ void Mesh::DrawShape4() {
 
     Mesh firstTriangle;
     firstTriangle.CreatePismatic(height, 1.2, 1.2, 1);
-    firstTriangle.DrawWireframe();
+    firstTriangle.Draw();
 
     glTranslatef(1.2, 0, 0.5);
     glRotatef(90, 0, 1, 0);
     Mesh pizzaPi;
     pizzaPi.CreatePizza(30, PI, height, 0.5);
-    pizzaPi.DrawWireframe();
-
-
+    pizzaPi.Draw();
 }
 
-void Mesh::DrawShape5() {
-    Mesh pizzaPidiv2;
-    Mesh pismaticBody;
+void Mesh::DrawShape5(int nSegment, float fWidth, float fLength, float fHeight) {
+    numVerts = nSegment * 4 + 4;
+    pt = new Point3[numVerts];
+
+    float fAngle = PI/nSegment;
+    float x, y, z;
+
+    for (int i = 0; i < nSegment + 1; i++) {
+        float r = fWidth/2;
+
+        x = -(r * sin(fAngle*i) + fLength/2);
+        z = r * cos(fAngle*i);
+        y = fHeight/2;
+        pt[i].set(x, y, z);
+        pt[2 * nSegment + 1 - i].set(-x, y, z);
+        pt[2 * nSegment + 2 + i].set(x, -y, z);
+        pt[4 * nSegment + 3 - i].set(-x, -y, z);
+    }
+
+    numFaces = 2 * nSegment + 4;
+    face = new Face[numFaces];
+
+//        Assign points for top and bottom faces
+    face[0].nVerts = 2 * nSegment + 2;
+    face[0].vert = new VertexID[face[0].nVerts];
+    face[1].nVerts = 2 * nSegment + 2;
+    face[1].vert = new VertexID[face[1].nVerts];
+
+    int idx = 2;
+//        Draw top and bottom faces
+    for (int i = 0; i < 2 * nSegment + 2; i++) {
+        face[0].vert[i].vertIndex = i;
+        face[1].vert[i].vertIndex = 2 * nSegment + 2 + i;
+
+//        Draw side faces
+        face[idx].nVerts = 4;
+        face[idx].vert = new VertexID[face[idx].nVerts];
+        face[idx].vert[0].vertIndex = i;
+        face[idx].vert[1].vertIndex =
+            i == 2 * nSegment + 1 ? 0 : i + 1;
+        face[idx].vert[2].vertIndex =
+            i == 2 * nSegment + 1 ? i + 1 : 2 * nSegment + 3 + i;
+        face[idx].vert[3].vertIndex = 2 * nSegment + 2 + i;
+        idx++;
+    }
+    
+    CalculateFacesNorm();
 }
 
 void Mesh::DrawWireframe()
@@ -332,6 +379,49 @@ void Mesh::DrawColor()
             ic = f % COLORNUM;
 
             glColor3f(ColorArr[ic][0], ColorArr[ic][1], ColorArr[ic][2]);
+            glVertex3f(pt[iv].x, pt[iv].y, pt[iv].z);
+        }
+        glEnd();
+    }
+}
+
+void Mesh::CalculateFacesNorm() {
+    float   mx, my, mz;
+    int     idx, next;
+
+    for (int f = 0; f < numFaces; f++)
+    {
+        mx = 0;
+        my = 0;
+        mz = 0;
+        for (int v = 0; v < face[f].nVerts; v++)
+        {
+            idx = v;
+            next = (idx + 1) % face[f].nVerts;
+
+            int p1 = face[f].vert[idx].vertIndex;
+            int p2 = face[f].vert[next].vertIndex;
+
+            mx = mx + (pt[p1].y - pt[p2].y)*(pt[p1].z + pt[p2].z);
+            my = my + (pt[p1].z - pt[p2].z)*(pt[p1].x + pt[p2].x);
+            mz = mz + (pt[p1].x - pt[p2].x)*(pt[p1].y + pt[p2].y);
+
+        }
+        face[f].facenorm.set(mx, my, mz);
+        face[f].facenorm.normalize();
+    }
+}
+
+void Mesh::Draw() {
+    for (int f = 0; f < numFaces; f++){
+        glBegin(GL_POLYGON);
+        for (int v = 0; v < face[f].nVerts; v++){
+            int iv = face[f].vert[v].vertIndex;
+            glNormal3f(
+               face[f].facenorm.x,
+               face[f].facenorm.y,
+               face[f].facenorm.z
+            );
             glVertex3f(pt[iv].x, pt[iv].y, pt[iv].z);
         }
         glEnd();

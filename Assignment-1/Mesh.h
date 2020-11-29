@@ -14,8 +14,9 @@ public:
 class Face
 {
 public:
-    int        nVerts;
-    VertexID*    vert;
+    int         nVerts;
+    VertexID*   vert;
+    Vector3     facenorm;
 
     Face()
     {
@@ -64,6 +65,8 @@ public:
     }
     void DrawWireframe();
     void DrawColor();
+    void CalculateFacesNorm();
+    void Draw();
 
     void CreatePizza(int nSegment, float fAngle, float fHeight, float fRadius);
     void CreateJoint(int nSegment, float fWidth, float fLength, float fHeight);
@@ -72,7 +75,7 @@ public:
     void DrawShape2();
     void DrawShape3();
     void DrawShape4();
-    void DrawShape5();
+    void DrawShape5(int nSegment, float fWidth, float fLength, float fHeight);
 };
 
 #endif
