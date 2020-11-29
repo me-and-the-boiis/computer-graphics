@@ -215,8 +215,32 @@ void Mesh::DrawShape1() {
 }
 
 void Mesh::DrawShape2() {
-    Mesh pizzaPidiv2;
+    const float height = 0.5;
+    glPushMatrix();
+    Mesh pizzaPi;
+    glTranslatef(0.6, 0, 6);
+    pizzaPi.CreatePizza(20, PI, height, 0.5);
+    pizzaPi.DrawColor();
+    glPopMatrix();
+
+    glPushMatrix();
+    glScalef(1, 1, -1);
+    glPushMatrix();
+    glTranslatef(0.35, 0, 0);
+    Mesh pismaticBody1;
+    pismaticBody1.CreatePismatic(height, 0.5, 0.6, 1.5, -0.1, 1.5);
+    pismaticBody1.DrawColor();
+    glPopMatrix();
+
+    Mesh pizzaSmal;
+    glTranslatef(0.6, 0, 1.5);
+    pizzaSmal.CreatePizza(20, PI, height, 0.35);
+    pizzaSmal.DrawColor();
+    glPopMatrix();
+
     Mesh pismaticBody;
+    pismaticBody.CreatePismatic(height, 1.2, 1.1, 6, .1, 6);
+    pismaticBody.DrawColor();
 }
 
 void Mesh::DrawShape3() {
