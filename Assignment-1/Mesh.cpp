@@ -55,15 +55,15 @@ void Mesh::CreatePizza(int nSegment, float Angle, float fHeight, float fRadius) 
         face[numFaces-1].nVerts = 4;
         face[numFaces-1].vert = new VertexID[4];
         face[numFaces-1].vert[0].vertIndex = 0;
-        face[numFaces-1].vert[1].vertIndex = 1;
+        face[numFaces-1].vert[1].vertIndex = numVerts - 1;
         face[numFaces-1].vert[2].vertIndex = nSegment + 1;
-        face[numFaces-1].vert[3].vertIndex = numVerts - 1;
+        face[numFaces-1].vert[3].vertIndex = 1;
         face[numFaces-2].nVerts = 4;
         face[numFaces-2].vert = new VertexID[4];
         face[numFaces-2].vert[0].vertIndex = 0;
-        face[numFaces-2].vert[1].vertIndex = numSegment + 1;
+        face[numFaces-2].vert[1].vertIndex = numVerts - 1;
         face[numFaces-2].vert[2].vertIndex = nSegment + 1 + numSegment;
-        face[numFaces-2].vert[3].vertIndex = numVerts - 1;
+        face[numFaces-2].vert[3].vertIndex = numSegment + 1;
 	} else {
         numFaces= nSegment*3;
         face = new Face[numFaces];
@@ -258,40 +258,28 @@ void Mesh::DrawShape3() {
     float alpha = atan(0.5);
     glTranslatef(1.5, 0, 1);
     glRotatef(2*alpha/(2*PI)*360, 0, 1, 0);
+    glScalef(-1, 1, 1);
+    glRotatef(180, 0, 1, 0);
     Mesh thirdTriangle;
-    thirdTriangle.CreatePismatic(height, 0.5, 0.5, -1);
+    thirdTriangle.CreatePismatic(height, 0.5, 0.5, 1);
     thirdTriangle.Draw();
-
+    
+    glRotatef(180, 0, 1, 0);
+    glScalef(-1, 1, 1);
     Mesh pizza2div3PI;
     pizza2div3PI.CreatePizza(30, 2*PI/3, height, 0.5);
     pizza2div3PI.Draw();
 
     float alpha3 = 2*PI - (atan(2)*2+atan(2./3)+2*PI/3);
     glRotatef(-(120+alpha3/(2*PI)*360), 0, 1, 0);
+    glScalef(-1, 1, 1);
+    glRotatef(180, 0, 1, 0);
+    
     Mesh firstTriangle;
-    firstTriangle.CreatePismatic(height, sqrt(1+1.5*1.5), 0.5*cos(alpha3), -0.5*sin(alpha3));
+    firstTriangle.CreatePismatic(height, sqrt(1+1.5*1.5), 0.5*cos(alpha3), 0.5*sin(alpha3));
     firstTriangle.Draw();
 
-
-//
-//
-
-//
-//    alpha = atan(0.5);
-//    glTranslatef(1, 0, 1.5);
-
-//    glTranslatef(-0.5, 0, 0);
-
-//
-//    glTranslatef(0.5, 0, 0);
-//    glRotatef(-(90-2*(alpha/(2*PI)*360))    , 0, 1, 0);
-
-
-
     glPopMatrix();
-//    Mesh pismaticBody;
-//    pismaticBody.CreatePismatic(1, 1, 1, 5, 0, 3.5);
-//    pismaticBody.DrawColor();
 }
 
 void Mesh::DrawShape4() {
