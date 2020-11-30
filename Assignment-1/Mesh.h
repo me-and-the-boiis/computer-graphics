@@ -42,7 +42,7 @@ public:
     int        numFaces;
     Face*        face;
     
-    bool drawMeshFlag;
+    bool drawMeshFlag = 0;
 public:
     Mesh()
     {
@@ -50,7 +50,6 @@ public:
         pt        = NULL;
         numFaces    = 0;
         face        = NULL;
-        drawMeshFlag    = 0;
     }
     ~Mesh()
     {

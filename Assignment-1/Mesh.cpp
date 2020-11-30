@@ -3,6 +3,7 @@
 #include "Mesh.h"
 #include <math.h>
 #include <iostream>
+
 #define PI            3.1415926
 #define    COLORNUM        14
 
@@ -264,7 +265,11 @@ void Mesh::DrawShape2() {
     Mesh pizzaPi;
     glTranslatef(0.6, 0, 6);
     pizzaPi.CreatePizza(20, PI, height, 0.5);
-    pizzaPi.Draw();
+    if (drawMeshFlag) {
+        pizzaPi.DrawWireframe();
+    } else {
+        pizzaPi.Draw();
+    }
     glPopMatrix();
 
     glPushMatrix();
@@ -273,18 +278,31 @@ void Mesh::DrawShape2() {
     glTranslatef(0.35, 0, 0);
     Mesh pismaticBody1;
     pismaticBody1.CreatePismatic(height, 0.5, 0.6, 1.5, -0.1, 1.5);
-    pismaticBody1.Draw();
+    if (drawMeshFlag) {
+        pismaticBody1.DrawWireframe();
+    } else {
+        pismaticBody1.Draw();
+    }
     glPopMatrix();
 
     Mesh pizzaSmal;
     glTranslatef(0.6, 0, 1.5);
     pizzaSmal.CreatePizza(20, PI, height, 0.35);
-    pizzaSmal.Draw();
+    if (drawMeshFlag) {
+        pizzaSmal.DrawWireframe();
+    } else {
+        pizzaSmal.Draw();
+    }
     glPopMatrix();
 
     Mesh pismaticBody;
     pismaticBody.CreatePismatic(height, 1.2, 1.1, 6, .1, 6);
     pismaticBody.Draw();
+    if (drawMeshFlag) {
+        pismaticBody.DrawWireframe();
+    } else {
+        pismaticBody.Draw();
+    }
 }
 
 void Mesh::DrawShape3() {
@@ -329,22 +347,6 @@ void Mesh::DrawShape3() {
     Mesh firstTriangle;
     firstTriangle.CreatePismatic(height, sqrt(1+1.5*1.5), 0.5*cos(alpha3), 0.5*sin(alpha3));
     firstTriangle.Draw();
-
-
-//
-//
-
-//
-//    alpha = atan(0.5);
-//    glTranslatef(1, 0, 1.5);
-
-//    glTranslatef(-0.5, 0, 0);
-
-//
-//    glTranslatef(0.5, 0, 0);
-//    glRotatef(-(90-2*(alpha/(2*PI)*360))    , 0, 1, 0);
-
-
 
     glPopMatrix();
 }
@@ -651,6 +653,7 @@ void Mesh::BigDraw(float shape2Angle) {
 
 void Mesh::DrawMechanicDevice(bool drawFlag, int nChoice) {
     Mesh shape;
+    shape.drawMeshFlag = drawFlag;
     if (nChoice == 1) {
         float ambient[] = { 0.105882f, 0.058824f, 0.113725f, 1.0f };
         float diffuse[] = { 0.427451f, 0.470588f, 0.541176f, 1.0f };
@@ -684,12 +687,16 @@ void Mesh::DrawMechanicDevice(bool drawFlag, int nChoice) {
         shape.DrawShape4();
     }
     else if (nChoice == 5) {
-        float ambient[] = { 0.05f, 0.05f, 0.05f, 1.0f };
-        float diffuse[] = { 0.5f, 0.5f, 0.5f, 1.0f};
-        float specular[] = { 0.7f, 0.7f, 0.7f, 1.0f };
+        float ambient[] = { 0.0f, 0.05f, 0.0f, 1.0f };
+        float diffuse[] = { 0.4f, 0.5f, 0.4f, 1.0f };
+        float specular[] = { 0.04f, 0.7f, 0.04f, 1.0f };
         float shininess = 10.0f;
         setupMaterial(ambient, diffuse, specular, shininess);
         shape.DrawShape5(15, 1, 1, 1);
-        shape.Draw();
+        if (drawFlag) {
+            shape.DrawWireframe();
+        } else {
+            shape.Draw();
+        }
     }
 }

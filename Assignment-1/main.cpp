@@ -21,7 +21,7 @@ using namespace std;
 int        screenWidth = 600;
 int        screenHeight= 600;
 
-int        nChoice = 1;
+int        nChoice = 2;
 
 float cameraAngle = 45;
 float cameraHeight = 0;
@@ -42,7 +42,7 @@ void mySpecialFunc(int key, int x, int y) {
     }
     else if (key == GLUT_KEY_DOWN) {
         cameraHeight -= 0.25;
-    }
+    } else return;
     glutPostRedisplay();
 }
 
@@ -61,10 +61,9 @@ void myKeyboard(unsigned char key, int x, int y) {
     } else if (key == '2') {
         shape2Angle -=shape2Angle>-24;
     }
-//    else if (key == 'W' || key == 'w') {
-//        drawFlag = !drawFlag;
-//        cout << drawFlag;
-//    }
+    else if (key == 'W' || key == 'w') {
+        drawFlag = !drawFlag;
+    } else return;
     glutPostRedisplay();
 }
 
@@ -98,7 +97,7 @@ void setupLight() {
 
     GLfloat light_position_1[] = { -10.0f, 10.0f, -10.0f, 0.0f };
     glLightfv(GL_LIGHT1, GL_POSITION, light_position_1);
-    GLfloat lightIntensity_1[] = { 0.7f, 0.7f, 0.7f, 1.0f };
+    GLfloat lightIntensity_1[] = { 0.55f, 0.55f, 0.55f, 0.7f };
     glLightfv(GL_LIGHT1, GL_DIFFUSE, lightIntensity_1);
 
     glEnable(GL_LIGHTING);
@@ -129,7 +128,7 @@ void myDisplay()
 
     glRotatef(cameraAngle, 0, 1, 0);
     glScalef(1*cameraDistance, 1*cameraDistance, 1*cameraDistance);
-
+    
     setupLight();
     drawAxis();
 
@@ -138,6 +137,8 @@ void myDisplay()
     Mesh mesh;
     mesh.BigDraw(shape2Angle);
 
+    Mesh bigboi;
+    bigboi.DrawMechanicDevice(drawFlag, nChoice);
     glFlush();
     glutSwapBuffers();
 }
