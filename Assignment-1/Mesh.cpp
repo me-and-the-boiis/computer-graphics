@@ -9,6 +9,14 @@
 float radianToDegree(float radian) {
     return radian*180/PI;
 }
+
+void setupMaterial(float ambient[], float diffuse[], float specular[], float shiness) {
+    glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, ambient);
+    glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, diffuse);
+    glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, specular);
+    glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, shiness);
+}
+
 float    ColorArr[COLORNUM][3] = {
     {1.0, 0.0, 0.0},
     {0.0, 1.0, 0.0},
@@ -322,6 +330,22 @@ void Mesh::DrawShape3() {
     firstTriangle.CreatePismatic(height, sqrt(1+1.5*1.5), 0.5*cos(alpha3), 0.5*sin(alpha3));
     firstTriangle.Draw();
 
+
+//
+//
+
+//
+//    alpha = atan(0.5);
+//    glTranslatef(1, 0, 1.5);
+
+//    glTranslatef(-0.5, 0, 0);
+
+//
+//    glTranslatef(0.5, 0, 0);
+//    glRotatef(-(90-2*(alpha/(2*PI)*360))    , 0, 1, 0);
+
+
+
     glPopMatrix();
 }
 
@@ -623,4 +647,49 @@ void Mesh::BigDraw(float shape2Angle) {
         ;
     }
     glPopMatrix();
+}
+
+void Mesh::DrawMechanicDevice(bool drawFlag, int nChoice) {
+    Mesh shape;
+    if (nChoice == 1) {
+        float ambient[] = { 0.105882f, 0.058824f, 0.113725f, 1.0f };
+        float diffuse[] = { 0.427451f, 0.470588f, 0.541176f, 1.0f };
+        float specular[] = { 0.333333f, 0.333333f, 0.521569f, 1.0f };
+        float shininess = 9.84615f;
+        setupMaterial(ambient, diffuse, specular, shininess);
+        shape.DrawShape1();
+    }
+    else if (nChoice == 2) {
+        float ambient[] = { 0.25f, 0.20725f, 0.20725f, 0.922f };
+        float diffuse[] = { 1.0f, 0.829f, 0.829f, 0.922f };
+        float specular[] = { 0.296648f, 0.296648f, 0.296648f, 0.922f };
+        float shininess = 11.264f;
+        setupMaterial(ambient, diffuse, specular, shininess);
+        shape.DrawShape2();
+    }
+    else if (nChoice == 3) {
+        float ambient[] = { 0.2295f, 0.08825f, 0.0275f, 1.0f };
+        float diffuse[] = { 0.5508f, 0.2118f, 0.066f, 1.0f };
+        float specular[] = { 0.580594f, 0.223257f, 0.0695701f, 1.0f };
+        float shininess = 51.2f;
+        setupMaterial(ambient, diffuse, specular, shininess);
+        shape.DrawShape3();
+    }
+    else if (nChoice == 4) {
+        float ambient[] = { 0.0215f, 0.1745f, 0.0215f, 0.55f };
+        float diffuse[] = { 0.07568f, 0.61424f, 0.07568f, 0.55f };
+        float specular[] = { 0.633f, 0.727811f, 0.633f, 0.55f };
+        float shininess = 76.8f;
+        setupMaterial(ambient, diffuse, specular, shininess);
+        shape.DrawShape4();
+    }
+    else if (nChoice == 5) {
+        float ambient[] = { 0.05f, 0.05f, 0.05f, 1.0f };
+        float diffuse[] = { 0.5f, 0.5f, 0.5f, 1.0f};
+        float specular[] = { 0.7f, 0.7f, 0.7f, 1.0f };
+        float shininess = 10.0f;
+        setupMaterial(ambient, diffuse, specular, shininess);
+        shape.DrawShape5(15, 1, 1, 1);
+        shape.Draw();
+    }
 }

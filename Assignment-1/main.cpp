@@ -28,6 +28,7 @@ float cameraHeight = 0;
 float cameraDistance = 0.25;
 bool toggleLight = 0;
 float shape2Angle = 0;
+//bool drawFlag = 0;
 
 void mySpecialFunc(int key, int x, int y) {
     if (key == GLUT_KEY_LEFT) {
@@ -60,6 +61,10 @@ void myKeyboard(unsigned char key, int x, int y) {
     } else if (key == '2') {
         shape2Angle -=shape2Angle>-24;
     }
+//    else if (key == 'W' || key == 'w') {
+//        drawFlag = !drawFlag;
+//        cout << drawFlag;
+//    }
     glutPostRedisplay();
 }
 
@@ -78,6 +83,12 @@ void drawAxis()
     glEnd();
 }
 
+void setupMaterial(float ambient[], float diffuse[], float specular[], float shiness) {
+    glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, ambient);
+    glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, diffuse);
+    glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, specular);
+    glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, shiness);
+}
 
 void setupLight() {
     GLfloat light_position[] = { 10.0f, 10.0f, 10.0f, 0.0f };

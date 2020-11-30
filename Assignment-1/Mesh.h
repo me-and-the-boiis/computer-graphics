@@ -3,7 +3,6 @@
 
 #include "supportClass.h"
 
-
 class VertexID
 {
 public:
@@ -42,6 +41,8 @@ public:
 
     int        numFaces;
     Face*        face;
+    
+    bool drawMeshFlag;
 public:
     Mesh()
     {
@@ -49,6 +50,7 @@ public:
         pt        = NULL;
         numFaces    = 0;
         face        = NULL;
+        drawMeshFlag    = 0;
     }
     ~Mesh()
     {
@@ -68,6 +70,8 @@ public:
     void CalculateFacesNorm();
     void Draw();
     void BigDraw(float shape2Angle);
+    
+    void DrawMechanicDevice(bool drawFlag, int nChoice);
 
     void CreatePizza(int nSegment, float fAngle, float fHeight, float fRadius);
     void CreateJoint(int nSegment, float fWidth, float fLength, float fHeight);
