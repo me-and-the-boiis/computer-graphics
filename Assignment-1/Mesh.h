@@ -50,6 +50,7 @@ public:
         pt        = NULL;
         numFaces    = 0;
         face        = NULL;
+        drawMeshFlag    = 0;
     }
     ~Mesh()
     {

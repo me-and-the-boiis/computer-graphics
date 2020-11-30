@@ -21,6 +21,14 @@ using namespace std;
 int        screenWidth = 800;
 int        screenHeight= 800;
 
+Mesh    shape1;
+Mesh    shape2;
+Mesh    shape3;
+Mesh    shape4;
+Mesh    shape5;
+
+int        nChoice = 1;
+
 float cameraAngle = 45;
 float cameraHeight = 0;
 float cameraDistance = 0.25;
@@ -80,6 +88,45 @@ void drawAxis()
     glEnd();
 }
 
+void drawFloorPattern(float x, float y)
+{
+    float color = 0.7;
+    if (((abs(int(x)) + abs(int(y))) / 2) % 2 == 1) {
+        color = 0.5;
+    }
+
+    glColor3f(color, color, color);
+    glPushMatrix();
+    glTranslatef(x, 0, y);
+
+    glBegin(GL_POLYGON);
+    glVertex3f(0, 0, 0);
+    glVertex3f(0, 0, 2);
+    glVertex3f(2, 0, 2);
+    glVertex3f(2, 0, 0);
+    glEnd();
+
+    glPopMatrix();
+}
+
+void drawFloor()
+{
+    for (int i = -100; i < 100; i++)
+    {
+        for (int j = -100; j < 100; j++)
+        {
+            drawFloorPattern(i * 2, j * 2);
+        }
+    }
+}
+
+//void setupMaterial(float ambient[], float diffuse[], float specular[], float shiness) {
+//    glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, ambient);
+//    glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, diffuse);
+//    glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, specular);
+//    glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, shiness);
+//}
+
 void setupLight() {
     GLfloat light_position[] = { 10.0f, 10.0f, 10.0f, 0.0f };
     glLightfv(GL_LIGHT0, GL_POSITION, light_position);
@@ -122,6 +169,7 @@ void myDisplay()
     
     setupLight();
     drawAxis();
+    drawFloor();
 
     glColor3f(0, 0, 0);
 //    cout << 1;

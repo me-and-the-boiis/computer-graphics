@@ -348,6 +348,22 @@ void Mesh::DrawShape3() {
     firstTriangle.CreatePismatic(height, sqrt(1+1.5*1.5), 0.5*cos(alpha3), 0.5*sin(alpha3));
     firstTriangle.Draw();
 
+
+//
+//
+
+//
+//    alpha = atan(0.5);
+//    glTranslatef(1, 0, 1.5);
+
+//    glTranslatef(-0.5, 0, 0);
+
+//
+//    glTranslatef(0.5, 0, 0);
+//    glRotatef(-(90-2*(alpha/(2*PI)*360))    , 0, 1, 0);
+
+
+
     glPopMatrix();
 }
 
