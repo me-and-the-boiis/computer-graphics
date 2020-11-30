@@ -29,12 +29,13 @@ Mesh    shape5;
 
 int        nChoice = 1;
 
-float cameraAngle = 45;
-float cameraHeight = 0;
-float cameraDistance = 0.25;
+float cameraAngle = 0;
+float cameraHeight = 0.1;
+float cameraDistance = 0.3;
 bool toggleLight = 0;
 float shape2Angle = 0;
 bool drawFlag = 0;
+bool triggerView = 0;
 
 void mySpecialFunc(int key, int x, int y) {
     if (key == GLUT_KEY_LEFT) {
@@ -69,6 +70,9 @@ void myKeyboard(unsigned char key, int x, int y) {
     }
     else if (key == 'W' || key == 'w') {
         drawFlag = !drawFlag;
+    }
+    else if (key == 'V' || key == 'v') {
+        triggerView = !triggerView;
     } else return;
     glutPostRedisplay();
 }
@@ -165,17 +169,27 @@ void myDisplay()
 {
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
-    gluLookAt(
-          cameraDistance*cos(cameraAngle/360*2*PI),
-          cameraHeight,
-          cameraDistance*sin(cameraAngle/360*2*PI),
-          0.0, 0.0, 0.0, 0, 1, 0
-    );
+    if (!triggerView) {
+        gluLookAt(
+              cameraDistance*cos(cameraAngle/360*2*PI),
+              cameraHeight,
+              cameraDistance*sin(cameraAngle/360*2*PI),
+              0.0, 0.0, 0.0, 0, 1, 0
+        );
+        glRotatef(cameraAngle, 0, 1, 0);
+    } else {
+        gluLookAt(1, 0, 0, 0, 0, 0, 0, 1, 0);
+    }
+    cout << cameraDistance*cos(cameraAngle/360*2*PI) << endl;
+    cout << cameraHeight << endl;
+    cout << cameraDistance*sin(cameraAngle/360*2*PI) << endl;
+//    cout << cameraDistance << "# " << cameraHeight << "# " << cameraAngle << endl;
+    cout << "**" << endl;
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glViewport(0, 0, screenWidth*2, screenHeight*2);
 
-    glRotatef(cameraAngle, 0, 1, 0);
+    
     glScalef(1*cameraDistance, 1*cameraDistance, 1*cameraDistance);
     
     drawAxis();
