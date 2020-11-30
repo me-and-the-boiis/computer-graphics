@@ -6,6 +6,7 @@
 
 #define PI            3.1415926
 #define    COLORNUM        14
+float flagMeshDraw = 0;
 
 float radianToDegree(float radian) {
     return radian*180/PI;
@@ -220,7 +221,7 @@ void Mesh::DrawCylinder() {
     glPushMatrix();
     Mesh pizza2PI;
     pizza2PI.CreatePizza(20, 2*PI, height, 0.25);
-    pizza2PI.Draw();
+    pizza2PI.specialDraw();
     glPopMatrix();
 }
 void Mesh::DrawShape0() {
@@ -229,7 +230,7 @@ void Mesh::DrawShape0() {
 //    glTranslated();
     Mesh pismaticBody;
     pismaticBody.CreatePismatic(height, 3, 16);
-    pismaticBody.Draw();
+    pismaticBody.specialDraw();
     glPopMatrix();
 }
 
@@ -245,12 +246,12 @@ void Mesh::DrawShape1() {
 
     Mesh pismaticBody;
     pismaticBody.CreatePismatic(height, 1.5, 1, 7, 0, 7);
-    pismaticBody.Draw();
+    pismaticBody.specialDraw();
     glTranslatef(0, 0, 7);
 
     Mesh pizzaPidiv2;
     pizzaPidiv2.CreatePizza(20, PI/2, height, 1);
-    pizzaPidiv2.Draw();
+    pizzaPidiv2.specialDraw();
 
     glPopMatrix();
 }
@@ -265,11 +266,7 @@ void Mesh::DrawShape2() {
     Mesh pizzaPi;
     glTranslatef(0.6, 0, 6);
     pizzaPi.CreatePizza(20, PI, height, 0.5);
-    if (drawMeshFlag) {
-        pizzaPi.DrawWireframe();
-    } else {
-        pizzaPi.Draw();
-    }
+    pizzaPi.specialDraw();
     glPopMatrix();
 
     glPushMatrix();
@@ -278,31 +275,18 @@ void Mesh::DrawShape2() {
     glTranslatef(0.35, 0, 0);
     Mesh pismaticBody1;
     pismaticBody1.CreatePismatic(height, 0.5, 0.6, 1.5, -0.1, 1.5);
-    if (drawMeshFlag) {
-        pismaticBody1.DrawWireframe();
-    } else {
-        pismaticBody1.Draw();
-    }
+    pismaticBody1.specialDraw();
     glPopMatrix();
 
     Mesh pizzaSmal;
     glTranslatef(0.6, 0, 1.5);
     pizzaSmal.CreatePizza(20, PI, height, 0.35);
-    if (drawMeshFlag) {
-        pizzaSmal.DrawWireframe();
-    } else {
-        pizzaSmal.Draw();
-    }
+    pizzaSmal.specialDraw();
     glPopMatrix();
 
     Mesh pismaticBody;
     pismaticBody.CreatePismatic(height, 1.2, 1.1, 6, .1, 6);
-    pismaticBody.Draw();
-    if (drawMeshFlag) {
-        pismaticBody.DrawWireframe();
-    } else {
-        pismaticBody.Draw();
-    }
+    pismaticBody.specialDraw();
 }
 
 void Mesh::DrawShape3() {
@@ -317,12 +301,12 @@ void Mesh::DrawShape3() {
     glPushMatrix();
     Mesh fourthQuad;
     fourthQuad.CreatePismatic(height, 1, 4);
-    fourthQuad.Draw();
+    fourthQuad.specialDraw();
 
     glTranslatef(0, 0, 4);
     Mesh secondQuad;
     secondQuad.CreatePismatic(height, 1, 1.5, 1, 0, 2);
-    secondQuad.Draw();
+    secondQuad.specialDraw();
 
     float alpha = atan(0.5);
     glTranslatef(1.5, 0, 1);
@@ -331,13 +315,13 @@ void Mesh::DrawShape3() {
     glRotatef(180, 0, 1, 0);
     Mesh thirdTriangle;
     thirdTriangle.CreatePismatic(height, 0.5, 0.5, 1);
-    thirdTriangle.Draw();
+    thirdTriangle.specialDraw();
 
     glRotatef(180, 0, 1, 0);
     glScalef(-1, 1, 1);
     Mesh pizza2div3PI;
     pizza2div3PI.CreatePizza(30, 2*PI/3, height, 0.5);
-    pizza2div3PI.Draw();
+    pizza2div3PI.specialDraw();
 
     float alpha3 = 2*PI - (atan(2)*2+atan(2./3)+2*PI/3);
     glRotatef(-(120+alpha3/(2*PI)*360), 0, 1, 0);
@@ -346,23 +330,7 @@ void Mesh::DrawShape3() {
 
     Mesh firstTriangle;
     firstTriangle.CreatePismatic(height, sqrt(1+1.5*1.5), 0.5*cos(alpha3), 0.5*sin(alpha3));
-    firstTriangle.Draw();
-
-
-//
-//
-
-//
-//    alpha = atan(0.5);
-//    glTranslatef(1, 0, 1.5);
-
-//    glTranslatef(-0.5, 0, 0);
-
-//
-//    glTranslatef(0.5, 0, 0);
-//    glRotatef(-(90-2*(alpha/(2*PI)*360))    , 0, 1, 0);
-
-
+    firstTriangle.specialDraw();
 
     glPopMatrix();
 }
@@ -378,7 +346,7 @@ void Mesh::DrawShape5() {
     Mesh shape5;
     shape5.CreateShape5(20, 1, 2, 0.5);
     glTranslatef(0,-0.25,0);
-    shape5.Draw();
+    shape5.specialDraw();
     glPopMatrix();
 }
 
@@ -395,7 +363,7 @@ void Mesh::DrawShape4() {
     float h = sqrt(1.2*1.2+1-0.7*0.7);
     float xPoint2 = 2.7 + sqrt(1.2*1.2+1-0.7*0.7);
     fourthQuad.CreatePismatic(height, 2.7, xPoint2, 0.7, 0, 3);
-    fourthQuad.Draw();
+    fourthQuad.specialDraw();
 
     glTranslatef(2.7, 0, 0);
 
@@ -409,13 +377,13 @@ void Mesh::DrawShape4() {
 
     Mesh firstTriangle;
     firstTriangle.CreatePismatic(height, 1.2, 1.2, 1);
-    firstTriangle.Draw();
+    firstTriangle.specialDraw();
 
     glTranslatef(1.2, 0, 0.5);
     glRotatef(90, 0, 1, 0);
     Mesh pizzaPi;
     pizzaPi.CreatePizza(30, PI, height, 0.5);
-    pizzaPi.Draw();
+    pizzaPi.specialDraw();
     glPopMatrix();
 }
 
@@ -531,6 +499,7 @@ void Mesh::CalculateFacesNorm() {
 }
 
 void Mesh::Draw() {
+    glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
     for (int f = 0; f < numFaces; f++){
         glBegin(GL_POLYGON);
         for (int v = 0; v < face[f].nVerts; v++){
@@ -546,7 +515,8 @@ void Mesh::Draw() {
     }
 }
 
-void Mesh::BigDraw(float shape2Angle) {
+void Mesh::BigDraw(float shape2Angle, float drawFlag) {
+    flagMeshDraw = drawFlag;
     float h = sqrt(1.2*1.2+1-0.7*0.7);
     float xPoint2 = 2.7 + sqrt(1.2*1.2+1-0.7*0.7);
     float a2 = sqrt(1.2*1.2+0.5*0.5);
@@ -554,7 +524,6 @@ void Mesh::BigDraw(float shape2Angle) {
     float beta = acos((a2*a2+b*b-0.5*0.5)/(2*a2*b));
     float miniAlpha = PI/2 - beta - atan(h/0.7);
     float xT = a2*sin(miniAlpha);
-    std::cout << xT << ' ' << std::endl;
     float angle1, angle2, angle0;
     {
         float shape2AngleR = shape2Angle*PI/180;
@@ -563,17 +532,13 @@ void Mesh::BigDraw(float shape2Angle) {
         angle0 = atan(b/a);
         float c = sqrt(a*a+b*b);
         float c1 = L1*sin(shape2AngleR), c2 = L1*cos(shape2AngleR);
-//        std::cout << c1 << ' ' << c2 << std::endl;
         float alpha1 = atan(c1/(c-c2));
 
         float m = sqrt(c1*c1+(c-c2)*(c-c2));
         float alpha2 = acos((L3*L3+m*m-L2*L2)/(2*L3*m));
         float alpha3 = alpha2 - (atan(b/a) - alpha1);
         float alpha4 = acos((L3*L3+L2*L2-m*m)/(2*L3*L2));
-        std::cout << m << radianToDegree(alpha4) << std::endl;
         angle1 = alpha3; angle2 = alpha4;
-
-        std::cout << radianToDegree(shape2AngleR) << ' ' << radianToDegree(angle1) << ' ' << radianToDegree(angle2) << std::endl;
     }
 
 
@@ -709,9 +674,16 @@ void Mesh::DrawMechanicDevice(bool drawFlag, int nChoice) {
         setupMaterial(ambient, diffuse, specular, shininess);
 //        shape.DrawShape5(15, 1, 1, 1);
         if (drawFlag) {
-            shape.DrawWireframe();
+            shape.specialDraw();
         } else {
-            shape.Draw();
+            shape.specialDraw();
         }
+    }
+}
+void Mesh::specialDraw() {
+    if (flagMeshDraw) {
+        Draw();
+    } else {
+        DrawWireframe();
     }
 }

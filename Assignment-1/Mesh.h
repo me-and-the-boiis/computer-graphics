@@ -41,7 +41,7 @@ public:
 
     int        numFaces;
     Face*        face;
-    
+
     bool drawMeshFlag = 0;
 public:
     Mesh()
@@ -72,6 +72,9 @@ public:
     void BigDraw(float shape2Angle);
     void reflect(float shape2Angle);
     
+    void BigDraw(float shape2Angle, float drawFlag);
+    void specialDraw();
+
     void DrawMechanicDevice(bool drawFlag, int nChoice);
 
     void CreatePizza(int nSegment, float fAngle, float fHeight, float fRadius);

@@ -3,11 +3,11 @@
 
 #define GL_SILENCE_DEPRECATION
 
-#include <GLUT/GLUT.h>
+//#include <GLUT/GLUT.h>
 
-//#include <gl/gl.h>
-//#include <gl/glut.h>
-//#include <windows.h>
+#include <gl/gl.h>
+#include <gl/glut.h>
+#include <windows.h>
 
 #include <math.h>
 #include <iostream>
@@ -135,13 +135,6 @@ void drawFloor()
 //      glEnable(GL_LIGHTING);
 }
 
-//void setupMaterial(float ambient[], float diffuse[], float specular[], float shiness) {
-//    glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, ambient);
-//    glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, diffuse);
-//    glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, specular);
-//    glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, shiness);
-//}
-
 void setupLight() {
     GLfloat light_position[] = { 10.0f, 10.0f, 10.0f, 0.0f };
     glLightfv(GL_LIGHT0, GL_POSITION, light_position);
@@ -164,7 +157,7 @@ void setupLight() {
 
     glEnable(GL_NORMALIZE);
 }
-
+void myInit();
 void myDisplay()
 {
     glMatrixMode(GL_MODELVIEW);
@@ -187,7 +180,7 @@ void myDisplay()
     cout << "**" << endl;
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glViewport(0, 0, screenWidth*2, screenHeight*2);
+    glViewport(0, 0, screenWidth, screenHeight);
 
     
     glScalef(1*cameraDistance, 1*cameraDistance, 1*cameraDistance);
@@ -219,7 +212,7 @@ void myInit()
     float    fHalfSize = 8;
 
     glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glFrontFace(GL_CCW);
     glEnable(GL_DEPTH_TEST);
 
