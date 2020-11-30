@@ -530,15 +530,6 @@ void Mesh::Draw() {
     }
 }
 
-
-void setupMaterial(float ambient[], float diffuse[], float specular[], float shiness) {
-    glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, ambient);
-    glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, diffuse);
-    glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, specular);
-    glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, shiness);
-}
-
-
 void Mesh::BigDraw(float shape2Angle) {
     float h = sqrt(1.2*1.2+1-0.7*0.7);
     float xPoint2 = 2.7 + sqrt(1.2*1.2+1-0.7*0.7);
@@ -692,7 +683,7 @@ void Mesh::DrawMechanicDevice(bool drawFlag, int nChoice) {
         float specular[] = { 0.04f, 0.7f, 0.04f, 1.0f };
         float shininess = 10.0f;
         setupMaterial(ambient, diffuse, specular, shininess);
-        shape.DrawShape5(15, 1, 1, 1);
+//        shape.DrawShape5(15, 1, 1, 1);
         if (drawFlag) {
             shape.DrawWireframe();
         } else {

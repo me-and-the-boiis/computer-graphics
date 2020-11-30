@@ -3,11 +3,11 @@
 
 #define GL_SILENCE_DEPRECATION
 
-//#include <GLUT/GLUT.h>
+#include <GLUT/GLUT.h>
 
-#include <gl/gl.h>
-#include <gl/glut.h>
-#include <windows.h>
+//#include <gl/gl.h>
+//#include <gl/glut.h>
+//#include <windows.h>
 
 #include <math.h>
 #include <iostream>
@@ -18,17 +18,15 @@
 
 using namespace std;
 
-int        screenWidth = 600;
-int        screenHeight= 600;
-
-int        nChoice = 2;
+int        screenWidth = 800;
+int        screenHeight= 800;
 
 float cameraAngle = 45;
 float cameraHeight = 0;
 float cameraDistance = 0.25;
 bool toggleLight = 0;
 float shape2Angle = 0;
-//bool drawFlag = 0;
+bool drawFlag = 0;
 
 void mySpecialFunc(int key, int x, int y) {
     if (key == GLUT_KEY_LEFT) {
@@ -82,13 +80,6 @@ void drawAxis()
     glEnd();
 }
 
-void setupMaterial(float ambient[], float diffuse[], float specular[], float shiness) {
-    glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, ambient);
-    glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, diffuse);
-    glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, specular);
-    glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, shiness);
-}
-
 void setupLight() {
     GLfloat light_position[] = { 10.0f, 10.0f, 10.0f, 0.0f };
     glLightfv(GL_LIGHT0, GL_POSITION, light_position);
@@ -124,7 +115,7 @@ void myDisplay()
     );
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glViewport(0, 0, screenWidth, screenHeight);
+    glViewport(0, 0, screenWidth*2, screenHeight*2);
 
     glRotatef(cameraAngle, 0, 1, 0);
     glScalef(1*cameraDistance, 1*cameraDistance, 1*cameraDistance);
@@ -137,8 +128,8 @@ void myDisplay()
     Mesh mesh;
     mesh.BigDraw(shape2Angle);
 
-    Mesh bigboi;
-    bigboi.DrawMechanicDevice(drawFlag, nChoice);
+//    Mesh bigboi;
+//    bigboi.DrawMechanicDevice(drawFlag, nChoice);
     glFlush();
     glutSwapBuffers();
 }

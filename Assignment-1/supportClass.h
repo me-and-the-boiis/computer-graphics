@@ -4,9 +4,9 @@
 #define _SUPPORT_CLASS
 
 
-#include <gl/gl.h>
-#include <gl/glut.h>
-//#include <GLUT/GLUT.h>
+//#include <gl/gl.h>
+//#include <gl/glut.h>
+#include <GLUT/GLUT.h>
 #include <math.h>
 
 class Point3
