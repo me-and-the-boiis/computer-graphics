@@ -70,6 +70,7 @@ public:
     void CalculateFacesNorm();
     void Draw();
     void BigDraw(float shape2Angle);
+    void reflect(float shape2Angle);
     
     void DrawMechanicDevice(bool drawFlag, int nChoice);
 

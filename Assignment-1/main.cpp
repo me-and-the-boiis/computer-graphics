@@ -38,26 +38,26 @@ bool drawFlag = 0;
 
 void mySpecialFunc(int key, int x, int y) {
     if (key == GLUT_KEY_LEFT) {
-        cameraAngle += 3;
+        cameraAngle += 1;
     }
     else if (key == GLUT_KEY_RIGHT) {
-        cameraAngle -= 3;
+        cameraAngle -= 1;
     }
     else if (key == GLUT_KEY_UP) {
-        cameraHeight += 0.25;
+        cameraHeight += 0.01;
     }
     else if (key == GLUT_KEY_DOWN) {
-        cameraHeight -= 0.25;
+        cameraHeight -= 0.01;
     } else return;
     glutPostRedisplay();
 }
 
 void myKeyboard(unsigned char key, int x, int y) {
     if (key == '+') {
-        cameraDistance += 0.05;
+        cameraDistance += 0.005;
     }
     else if (key == '-') {
-        cameraDistance -= 0.05;
+        cameraDistance -= 0.005;
     }
     else if (key == 'D' || key == 'd') {
         toggleLight = !toggleLight;
@@ -90,34 +90,45 @@ void drawAxis()
 
 void drawFloorPattern(float x, float y)
 {
-    float color = 0.7;
-    if (((abs(int(x)) + abs(int(y))) / 2) % 2 == 1) {
+    float color = 0.7, opa = 0.69;
+    if (((abs(int(x)) + abs(int(y))) / 4) % 2 == 1) {
         color = 0.5;
+        opa = 1;
     }
 
-    glColor3f(color, color, color);
+    glColor4f(color, color, color, opa);
     glPushMatrix();
     glTranslatef(x, 0, y);
 
-    glBegin(GL_POLYGON);
-    glVertex3f(0, 0, 0);
-    glVertex3f(0, 0, 2);
-    glVertex3f(2, 0, 2);
-    glVertex3f(2, 0, 0);
+    glDisable(GL_LIGHTING);
+      glBegin(GL_QUADS);
+        glVertex3f(0, 0, 0);
+        glVertex3f(0, 0, 4);
+        glVertex3f(4, 0, 4);
+        glVertex3f(4, 0, 0);
     glEnd();
+    glEnable(GL_LIGHTING);
 
     glPopMatrix();
 }
 
 void drawFloor()
 {
-    for (int i = -100; i < 100; i++)
+    for (int i = -30; i < 30; i++)
     {
-        for (int j = -100; j < 100; j++)
+        for (int j = -30; j < 30; j++)
         {
-            drawFloorPattern(i * 2, j * 2);
+            drawFloorPattern(i * 4, j * 4);
         }
     }
+//    glDisable(GL_LIGHTING);
+//      glBegin(GL_QUADS);
+//        glVertex3f(-18.0, 0.0, 27.0);
+//        glVertex3f(27.0, 0.0, 27.0);
+//        glVertex3f(27.0, 0.0, -18.0);
+//        glVertex3f(-18.0, 0.0, -18.0);
+//      glEnd();
+//      glEnable(GL_LIGHTING);
 }
 
 //void setupMaterial(float ambient[], float diffuse[], float specular[], float shiness) {
@@ -167,13 +178,20 @@ void myDisplay()
     glRotatef(cameraAngle, 0, 1, 0);
     glScalef(1*cameraDistance, 1*cameraDistance, 1*cameraDistance);
     
-    setupLight();
     drawAxis();
-    drawFloor();
+    
+    setupLight();
+    
+    Mesh mesh;
+    mesh.reflect(shape2Angle);
+    
+    glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+//        glColor4f(1.0, 0.0, 0.0, 0.40);  /* 40% dark red floor color */
+        drawFloor();
+    glDisable(GL_BLEND);
 
     glColor3f(0, 0, 0);
-//    cout << 1;
-    Mesh mesh;
     mesh.BigDraw(shape2Angle);
 
 //    Mesh bigboi;

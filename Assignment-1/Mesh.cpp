@@ -658,6 +658,14 @@ void Mesh::BigDraw(float shape2Angle) {
     glPopMatrix();
 }
 
+void Mesh::reflect(float shape2Angle) {
+    glPushMatrix();
+    glScalef(1, -1, 1);
+    Mesh reflectBoi;
+    reflectBoi.BigDraw(shape2Angle);
+    glPopMatrix();
+}
+
 void Mesh::DrawMechanicDevice(bool drawFlag, int nChoice) {
     Mesh shape;
     shape.drawMeshFlag = drawFlag;
