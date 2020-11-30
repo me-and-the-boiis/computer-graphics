@@ -25,8 +25,9 @@ int        nChoice = 1;
 
 float cameraAngle = 45;
 float cameraHeight = 0;
-float cameraDistance = 1.25;
+float cameraDistance = 0.25;
 bool toggleLight = 0;
+float shape2Angle = 0;
 
 void mySpecialFunc(int key, int x, int y) {
     if (key == GLUT_KEY_LEFT) {
@@ -53,6 +54,11 @@ void myKeyboard(unsigned char key, int x, int y) {
     }
     else if (key == 'D' || key == 'd') {
         toggleLight = !toggleLight;
+    } else if (key == '1') {
+        //-20->14
+        shape2Angle +=shape2Angle<0;
+    } else if (key == '2') {
+        shape2Angle -=shape2Angle>-24;
     }
     glutPostRedisplay();
 }
@@ -117,9 +123,9 @@ void myDisplay()
     drawAxis();
 
     glColor3f(0, 0, 0);
-    cout << 1;
+//    cout << 1;
     Mesh mesh;
-    mesh.BigDraw();
+    mesh.BigDraw(shape2Angle);
 
     glFlush();
     glutSwapBuffers();
@@ -138,7 +144,7 @@ void myInit()
     glLoadIdentity();
 
     glOrtho(-fHalfSize/2, fHalfSize/2, -fHalfSize/2, fHalfSize/2, -1000, 1000);
-    gluLookAt(20, 20, 20, 0, 0, 0, 0, 1, 0);
+//    gluLookAt(20, 20, 20, 0, 0, 0, 0, 1, 0);
 }
 
 int main(int argc, char* argv[])

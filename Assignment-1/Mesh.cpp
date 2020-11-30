@@ -2,7 +2,7 @@
 
 #include "Mesh.h"
 #include <math.h>
-
+#include <iostream>
 #define PI            3.1415926
 #define    COLORNUM        14
 
@@ -200,27 +200,63 @@ void Mesh::CreatePismatic(float fHeight, float x, float x0, float z0, float x1, 
     CalculateFacesNorm();
 }
 
+void Mesh::DrawCylinder() {
+    float ambient[] = { 0.205882f, 0.158824f, 0.813725f, 1.0f };
+    float diffuse[] = { 0.427451f, 0.470588f, 0.541176f, 1.0f };
+    float specular[] = { 0.333333f, 0.333333f, 0.521569f, 1.0f };
+    float shininess = 9.84615f;
+    setupMaterial(ambient, diffuse, specular, shininess);
+
+    const float height = 1.2;
+    glPushMatrix();
+    Mesh pizza2PI;
+    pizza2PI.CreatePizza(20, 2*PI, height, 0.25);
+    pizza2PI.Draw();
+    glPopMatrix();
+}
+void Mesh::DrawShape0() {
+    const float height = 1.2;
+    glPushMatrix();
+//    glTranslated();
+    Mesh pismaticBody;
+    pismaticBody.CreatePismatic(height, 3, 16);
+    pismaticBody.Draw();
+    glPopMatrix();
+}
+
 void Mesh::DrawShape1() {
+    float ambient[] = { 0.105882f, 0.058824f, 0.113725f, 1.0f };
+    float diffuse[] = { 0.427451f, 0.470588f, 0.541176f, 1.0f };
+    float specular[] = { 0.333333f, 0.333333f, 0.521569f, 1.0f };
+    float shininess = 9.84615f;
+    setupMaterial(ambient, diffuse, specular, shininess);
+
     const float height = 0.5;
     glPushMatrix();
-    Mesh pizzaPidiv2;
-    glTranslatef(0, 0, 7);
-    pizzaPidiv2.CreatePizza(20, PI/2, height, 1);
-    pizzaPidiv2.Draw();
-    glPopMatrix();
 
     Mesh pismaticBody;
     pismaticBody.CreatePismatic(height, 1.5, 1, 7, 0, 7);
     pismaticBody.Draw();
+    glTranslatef(0, 0, 7);
+
+    Mesh pizzaPidiv2;
+    pizzaPidiv2.CreatePizza(20, PI/2, height, 1);
+    pizzaPidiv2.Draw();
+
+    glPopMatrix();
 }
 
 void Mesh::DrawShape2() {
+    float ambient[] = { 0.405882f, 0.458824f, 0.913725f, 1.0f };
+    float diffuse[] = { 0.427451f, 0.470588f, 0.541176f, 1.0f };
+    float specular[] = { 0.333333f, 0.333333f, 0.521569f, 1.0f };
+    float shininess = 9.84615f;
     const float height = 0.5;
     glPushMatrix();
     Mesh pizzaPi;
     glTranslatef(0.6, 0, 6);
     pizzaPi.CreatePizza(20, PI, height, 0.5);
-    pizzaPi.DrawColor();
+    pizzaPi.Draw();
     glPopMatrix();
 
     glPushMatrix();
@@ -229,21 +265,28 @@ void Mesh::DrawShape2() {
     glTranslatef(0.35, 0, 0);
     Mesh pismaticBody1;
     pismaticBody1.CreatePismatic(height, 0.5, 0.6, 1.5, -0.1, 1.5);
-    pismaticBody1.DrawColor();
+    pismaticBody1.Draw();
     glPopMatrix();
 
     Mesh pizzaSmal;
     glTranslatef(0.6, 0, 1.5);
     pizzaSmal.CreatePizza(20, PI, height, 0.35);
-    pizzaSmal.DrawColor();
+    pizzaSmal.Draw();
     glPopMatrix();
 
     Mesh pismaticBody;
     pismaticBody.CreatePismatic(height, 1.2, 1.1, 6, .1, 6);
-    pismaticBody.DrawColor();
+    pismaticBody.Draw();
 }
 
 void Mesh::DrawShape3() {
+
+    float ambient[] = { 0.2295f, 0.08825f, 0.0275f, 1.0f };
+    float diffuse[] = { 0.5508f, 0.2118f, 0.066f, 1.0f };
+    float specular[] = { 0.580594f, 0.223257f, 0.0695701f, 1.0f };
+    float shininess = 51.2f;
+    setupMaterial(ambient, diffuse, specular, shininess);
+
     const float height = 0.5;
     glPushMatrix();
     Mesh fourthQuad;
@@ -263,7 +306,7 @@ void Mesh::DrawShape3() {
     Mesh thirdTriangle;
     thirdTriangle.CreatePismatic(height, 0.5, 0.5, 1);
     thirdTriangle.Draw();
-    
+
     glRotatef(180, 0, 1, 0);
     glScalef(-1, 1, 1);
     Mesh pizza2div3PI;
@@ -274,7 +317,7 @@ void Mesh::DrawShape3() {
     glRotatef(-(120+alpha3/(2*PI)*360), 0, 1, 0);
     glScalef(-1, 1, 1);
     glRotatef(180, 0, 1, 0);
-    
+
     Mesh firstTriangle;
     firstTriangle.CreatePismatic(height, sqrt(1+1.5*1.5), 0.5*cos(alpha3), 0.5*sin(alpha3));
     firstTriangle.Draw();
@@ -282,7 +325,28 @@ void Mesh::DrawShape3() {
     glPopMatrix();
 }
 
+void Mesh::DrawShape5() {
+    float ambient[] = { 0.05f, 0.05f, 0.05f, 1.0f };
+    float diffuse[] = { 0.5f, 0.5f, 0.5f, 1.0f};
+    float specular[] = { 0.7f, 0.7f, 0.7f, 1.0f };
+    float shininess = 10.0f;
+    setupMaterial(ambient, diffuse, specular, shininess);
+
+    glPushMatrix();
+    Mesh shape5;
+    shape5.CreateShape5(20, 1, 2, 0.5);
+    glTranslatef(0,-0.25,0);
+    shape5.Draw();
+    glPopMatrix();
+}
+
 void Mesh::DrawShape4() {
+    float ambient[] = { 0.0215f, 0.1745f, 0.0215f, 0.55f };
+    float diffuse[] = { 0.07568f, 0.61424f, 0.07568f, 0.55f };
+    float specular[] = { 0.633f, 0.727811f, 0.633f, 0.55f };
+    float shininess = 76.8f;
+    setupMaterial(ambient, diffuse, specular, shininess);
+
     const float height = 0.5;
     glPushMatrix();
     Mesh fourthQuad;
@@ -310,9 +374,10 @@ void Mesh::DrawShape4() {
     Mesh pizzaPi;
     pizzaPi.CreatePizza(30, PI, height, 0.5);
     pizzaPi.Draw();
+    glPopMatrix();
 }
 
-void Mesh::DrawShape5(int nSegment, float fWidth, float fLength, float fHeight) {
+void Mesh::CreateShape5(int nSegment, float fWidth, float fLength, float fHeight) {
     numVerts = nSegment * 4 + 4;
     pt = new Point3[numVerts];
 
@@ -357,7 +422,6 @@ void Mesh::DrawShape5(int nSegment, float fWidth, float fLength, float fHeight) 
         face[idx].vert[3].vertIndex = 2 * nSegment + 2 + i;
         idx++;
     }
-
     CalculateFacesNorm();
 }
 
@@ -449,15 +513,92 @@ void setupMaterial(float ambient[], float diffuse[], float specular[], float shi
 }
 
 
-void Mesh::BigDraw() {
+void Mesh::BigDraw(float shape2Angle) {
+    float h = sqrt(1.2*1.2+1-0.7*0.7);
+    float xPoint2 = 2.7 + sqrt(1.2*1.2+1-0.7*0.7);
+    float a2 = sqrt(1.2*1.2+0.5*0.5);
+    float b = sqrt(1.2*1.2+1);
+    float beta = acos((a2*a2+b*b-0.5*0.5)/(2*a2*b));
+    float miniAlpha = PI/2 - beta - atan(h/0.7);
+    float xT = a2*sin(miniAlpha);
+    std::cout << xT << ' ' << std::endl;
+    float angle1, angle2, angle0;
+    {
+        float shape2AngleR = shape2Angle*PI/180;
+        float L1 = 3, L2 = 2, L3 = 2.9;
+        float b = 2.5, a = 5.5 + xT;
+        angle0 = atan(b/a);
+        float c = sqrt(a*a+b*b);
+        float c1 = L1*sin(shape2AngleR), c2 = L1*cos(shape2AngleR);
+//        std::cout << c1 << ' ' << c2 << std::endl;
+        float alpha1 = atan(c1/(c-c2));
+
+        float m = sqrt(c1*c1+(c-c2)*(c-c2));
+        float alpha2 = acos((L3*L3+m*m-L2*L2)/(2*L3*m));
+        float alpha3 = alpha2 - (atan(b/a) - alpha1);
+        float alpha4 = acos((L3*L3+L2*L2-m*m)/(2*L3*L2));
+        std::cout << m << radianToDegree(alpha4) << std::endl;
+        angle1 = alpha3; angle2 = alpha4;
+
+        std::cout << radianToDegree(shape2AngleR) << ' ' << radianToDegree(angle1) << ' ' << radianToDegree(angle2) << std::endl;
+    }
+
+
     Mesh    shape;
-    int nChoice = 3;
+    int nChoice = 0;
+    float ambient[] = { 0.105882f, 0.558824f, 0.113725f, 1.0f };
+    float diffuse[] = { 0.427451f, 0.470588f, 0.541176f, 1.0f };
+    float specular[] = { 0.333333f, 0.333333f, 0.521569f, 1.0f };
+    float shininess = 9.84615f;
+    glPushMatrix();
+    setupMaterial(ambient, diffuse, specular, shininess);
+    glTranslatef(-1.5, 0, -8);
+    shape.DrawShape0();
+
+    glTranslatef(1.5+0.25, 1.2, 11.5);
+    glRotated(90, 0 , 0, 1);
+    shape.DrawShape4();
+    glPushMatrix();
+    float a = sqrt(1.2*1.2+0.5*0.5-1.3*1.3);
+    glTranslatef(0, 0, -10.5);
+    shape.DrawShape3();
+
+    glScalef(1, -1, -1);
+//    glTranslatef(0.7, 0, 4.5);
+
+    glTranslatef(1.5, -0.6, -5);
+    shape.DrawCylinder();
+    glTranslatef(0, 0.6, 0);
+    glRotated(radianToDegree(angle1), 0, 1, 0);//
+    glTranslatef(-0.7, 0, -3.5);
+
+    shape.DrawShape1();
+    glTranslatef(0.7, 0, 0.6);
+    glScalef(1, -1, -1);
+    glTranslatef(0, -0.6, 0);
+    shape.DrawCylinder();
+
+    glRotatef(90-radianToDegree(angle2), 0, 1, 0); //
+//    glRotatef(5, 0, 1, 0);
+    glTranslatef(1, 1.1, 0);
+    shape.DrawShape5();
+    glTranslatef(1, -1.1, 0);
+
+    shape.DrawCylinder();
+    glPopMatrix();
+
+    glTranslatef(4, -0.6, xT);
+
+    shape.DrawCylinder();
+    glScalef(1, 1, -1);
+    glRotated(-shape2Angle - radianToDegree(angle0), 0, 1, 0);//
+
+    glTranslatef(-0.6, 0.1, -3);
+//    glTranslatef()
+
+    shape.DrawShape2();
+
     if (nChoice == 1) {
-        float ambient[] = { 0.105882f, 0.058824f, 0.113725f, 1.0f };
-        float diffuse[] = { 0.427451f, 0.470588f, 0.541176f, 1.0f };
-        float specular[] = { 0.333333f, 0.333333f, 0.521569f, 1.0f };
-        float shininess = 9.84615f;
-        setupMaterial(ambient, diffuse, specular, shininess);
         shape.DrawShape1();
     }
     else if (nChoice == 2) {
@@ -468,20 +609,9 @@ void Mesh::BigDraw() {
         setupMaterial(ambient, diffuse, specular, shininess);
         shape.DrawShape2();
     }
-    else if (nChoice == 3) {
-        float ambient[] = { 0.2295f, 0.08825f, 0.0275f, 1.0f };
-        float diffuse[] = { 0.5508f, 0.2118f, 0.066f, 1.0f };
-        float specular[] = { 0.580594f, 0.223257f, 0.0695701f, 1.0f };
-        float shininess = 51.2f;
-        setupMaterial(ambient, diffuse, specular, shininess);
-        shape.DrawShape3();
+    else if (nChoice == 3) {shape.DrawShape3();
     }
     else if (nChoice == 4) {
-        float ambient[] = { 0.0215f, 0.1745f, 0.0215f, 0.55f };
-        float diffuse[] = { 0.07568f, 0.61424f, 0.07568f, 0.55f };
-        float specular[] = { 0.633f, 0.727811f, 0.633f, 0.55f };
-        float shininess = 76.8f;
-        setupMaterial(ambient, diffuse, specular, shininess);
         shape.DrawShape4();
     }
     else if (nChoice == 5) {
@@ -490,6 +620,7 @@ void Mesh::BigDraw() {
         float specular[] = { 0.7f, 0.7f, 0.7f, 1.0f };
         float shininess = 10.0f;
         setupMaterial(ambient, diffuse, specular, shininess);
-        shape.DrawShape5(15, 1, 1, 1);
+        ;
     }
+    glPopMatrix();
 }

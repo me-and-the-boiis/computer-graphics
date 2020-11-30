@@ -67,16 +67,20 @@ public:
     void DrawColor();
     void CalculateFacesNorm();
     void Draw();
-    void BigDraw();
+    void BigDraw(float shape2Angle);
 
     void CreatePizza(int nSegment, float fAngle, float fHeight, float fRadius);
     void CreateJoint(int nSegment, float fWidth, float fLength, float fHeight);
     void CreatePismatic(float fHeight, float x, float x0 = -10, float z0 = -10, float x1 = -10, float z1 = -10);
+    void CreateShape5(int nSegment, float fWidth, float fLength, float fHeight);
+    void DrawCylinder();
+    void DrawShape0();
     void DrawShape1();
     void DrawShape2();
     void DrawShape3();
     void DrawShape4();
-    void DrawShape5(int nSegment, float fWidth, float fLength, float fHeight);
+    void DrawShape5();
 };
 
+void setupMaterial(float ambient[], float diffuse[], float specular[], float shiness);
 #endif
